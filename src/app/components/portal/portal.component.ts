@@ -11,10 +11,6 @@ import { NotificationService } from 'src/app/services/notification.service';
 })
 export class PortalComponent {
   form!: FormGroup;
-  features!: any[];
-
-
-
 
   constructor(
     private fb: FormBuilder,
@@ -24,12 +20,6 @@ export class PortalComponent {
   ) {}
 
   ngOnInit(): void {
-    this.features = [
-      { title: 'Unlimited Inbox', image: 'live-collaboration.svg', text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.' },
-      { title: 'Data Security', image: 'security.svg', text: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.' },
-      { title: 'Cloud Backup Williams', image: 'subscribe.svg', text: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.' }
-  ];
-
     this.form = this.fb.group({
       username: ['', [Validators.required]],
       password: ['', [Validators.required]],
@@ -40,7 +30,7 @@ export class PortalComponent {
     if (this.form.valid) {
       this.authService.login(this.form.value.username, this.form.value.password).subscribe((success) => {
         if (success) {
-          this.router.navigate(['/painel-admin']);
+          this.router.navigate(['/dashboard']);
           this.notificationService.success('Logado com sucesso');
         } else {
           this.notificationService.error('Email ou senha inválido');

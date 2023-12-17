@@ -12,11 +12,11 @@ import { LoginComponent } from './authentication/login/login.component';
 import { PainelComponent } from './admin/painel/painel.component';
 import { TrilhaComponent } from './components/trilha/trilha.component';
 import { PartnersComponent } from './components/partners/partners.component';
-import { PlansComponent } from './components/plans/plans.component';
 import { PlansPricesComponent } from './components/plans-prices/plans-prices.component';
 import { CustomerServiceComponent } from './components/customer-service/customer-service.component';
 import { AboutPageComponent } from './components/about-page/about-page.component';
 import { PortalComponent } from './components/portal/portal.component';
+import { DashboardComponent } from './platform/dashboard/dashboard.component';
 
 const routes: Routes = [
 
@@ -37,6 +37,11 @@ const routes: Routes = [
   { path: 'portal', component: PortalComponent },
   { path: 'planos', component: PlansPricesComponent },
   { path: 'parceiros', component: PartnersComponent },
+
+  //########## PLATAFORMA ################
+
+  { path: 'dashboard', component: DashboardComponent },
+
 
 ];
 
