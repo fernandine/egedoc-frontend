@@ -1,0 +1,84 @@
+<div class="min-h-screen flex relative lg:static"
+  style="background-image: linear-gradient(60deg, #ffffff 0%, #ffffff 100%);">
+  <div id="app-sidebar-8"
+    class="h-screen hidden lg:block flex-shrink-0 absolute lg:static left-0 top-0 z-1 border-right-1 select-none animation-duration-300 animation-ease-in-out border-white-alpha-10"
+    style="width:280px; background-image: linear-gradient(60deg, #3f3f3f 0%, #777a7e 100%);">
+    <div class="flex flex-column h-full">
+      <div class="flex align-items-center px-5 flex-shrink-0" style="height:60px">
+      </div>
+      <div class="overflow-y-auto">
+        <ul class="list-none p-3 m-0">
+          <li>
+            <a pRipple
+              class="flex align-items-center cursor-pointer p-3 text-gray-300 hover:bg-bluegray-700 transition-duration-150 transition-colors"
+              style="border-radius: 30px" (click)="selecionarComponente('testers')">
+              <i class="pi pi-check-square mr-2"></i>
+              <span class="font-medium">Testadores</span>
+            </a>
+          </li>
+          <li>
+            <a pRipple
+              class="flex align-items-center cursor-pointer p-3 text-gray-300 hover:bg-bluegray-700 transition-duration-150 transition-colors"
+              style="border-radius: 30px" (click)="selecionarComponente('subscribers')">
+              <i class="pi pi-at mr-2"></i>
+              <span class="font-medium">Atendimento</span>
+            </a>
+          </li>
+          <li>
+            <a pRipple
+              class="flex align-items-center cursor-pointer p-3 text-gray-300 hover:bg-bluegray-700 transition-duration-150 transition-colors"
+              style="border-radius: 30px" >
+              <i class="pi pi-clock mr-2"></i>
+              <span class="font-medium">Newsletter</span>
+            </a>
+          </li>
+          <li>
+            <a pRipple
+              class="flex align-items-center cursor-pointer p-3 text-gray-300 hover:bg-bluegray-700 transition-duration-150 transition-colors"
+              style="border-radius: 30px">
+              <span class="font-medium">Sair</span>
+            </a>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+  </div>
+  <div class="min-h-screen flex flex-column relative flex-auto">
+    <div
+      class="flex justify-content-between align-items-center px-5 border-bottom-1 relative lg:static border-white-alpha-10"
+      style="height:60px">
+      <div class="flex">
+        <a pRipple
+          class="cursor-pointer inline-flex align-items-center justify-content-center lg:hidden text-gray-300 mr-3"
+          pStyleClass="#app-sidebar-8" enterClass="hidden" enterActiveClass="fadeinleft" leaveToClass="hidden"
+          leaveActiveClass="fadeoutleft" [hideOnOutsideClick]="true">
+          <i class="pi pi-bars text-4xl"></i>
+        </a>
+      </div>
+      <a pRipple class="cursor-pointer block lg:hidden text-gray-300" pStyleClass="@next" enterClass="hidden"
+        enterActiveClass="fadein" leaveToClass="hidden" leaveActiveClass="fadeout" [hideOnOutsideClick]="true">
+        <i class="pi pi-ellipsis-v text-2xl"></i>
+      </a>
+      <ul
+        class="list-none p-0 m-0 hidden lg:flex lg:align-items-center select-none lg:flex-row right-0 top-100 z-1 shadow-2 lg:shadow-none absolute lg:static px-3 py-3 lg:py-0 mr-3 lg:mr-0"
+        style="background-image: linear-gradient(60deg, #29323c 0%, #485563 100%); border-radius: 30px">
+        <li class="mr-0 lg:mr-3">
+          <a pRipple class="flex p-3 lg:p-2  align-items-center text-gray-300 hover:bg-bluegray-700 font-medium cursor-pointer
+                          transition-duration-150 transition-colors" style="border-radius: 30px">
+            <i class="pi pi-bell text-base lg:text-2xl mr-2 lg:mr-0" pBadge severity="danger"></i>
+            <span class="block lg:hidden font-medium">Notifications</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+    <div class="p-5 flex flex-column flex-auto">
+
+      <div class="p-5 flex flex-column flex-auto">
+        <app-tester-list *ngIf="componenteSelecionado === 'testers'" [testers]="testers"></app-tester-list>
+        <app-subscriber-list *ngIf="componenteSelecionado === 'subscribers'" [subscribers]="subscribers"></app-subscriber-list>
+      </div>
+
+    </div>
+  </div>
+</div>

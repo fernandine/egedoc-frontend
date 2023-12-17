@@ -1,0 +1,55 @@
+<app-header></app-header>
+<div id="contato" class="surface-section px-4 py-8 md:px-6 lg:px-8 bg-no-repeat"
+style="background-size: contain;
+background-position: right;
+background-image: url('./../../../assets/images/image-hero2.jpg')"
+ >
+ <form [formGroup]="form" (ngSubmit)="submitForm()">
+    <div class="grid">
+        <div class="col-12 md:col-5">
+            <div class="p-fluid pr-0 md:pr-6">
+                <div class="field">
+                    <label for="name" class="font-medium">Nome Completo</label>
+                    <input id="name" formControlName="name" type="text" pInputText class="px-2 text-lg">
+                </div>
+                <div class="field">
+                    <label for="email" class="font-medium">E-mail</label>
+                    <input id="email" formControlName="email" type="text" pInputText class="px-2 text-lg">
+                </div>
+                <div class="field">
+                    <label for="company" class="font-medium">Empresa</label>
+                    <input id="company" formControlName="companyName" type="text" pInputText class="px-2 text-lg">
+                </div>
+                <div class="field">
+                    <label for="message" class="font-medium">Mensagem</label>
+                    <textarea id="message" formControlName="message" pInputTextarea rows="6" [autoResize]="true" class="px-2 text-lg"></textarea>
+                </div>
+                <button pButton pRipple label="Enviar" icon="pi pi-send mr-2" class="bg-bluegray-600 w-auto px-4"></button>
+            </div>
+        </div>
+        <div class="col-12 md:col-3 bg-right-bottom">
+            <div class="text-900 text-2xl font-medium mb-6">Atendimento ao Cliente</div>
+            <div class="text-700 line-height-3 mb-6">Horário de atendimento de Segunda à Sexta - 8h às 12h e 13h às 17h</div>
+
+            <button pButton (click)="openWhatsApp()" label="Whatsapp" icon="pi pi-whatsapp mr-2" style="background-color: #25D366;"></button>
+
+            <ul class="list-none p-0 m-0 mt-6 text-700">
+                <li class="flex align-items-center mb-3">
+                    <i class="pi pi-phone mr-2"></i>
+                    <span>+55 (31)  971736555</span>
+                </li>
+                <li class="flex align-items-center mb-3">
+                    <i class="pi pi-linkedin mr-2"></i>
+                    <span>egedoc</span>
+                </li>
+                <li class="flex align-items-center">
+                    <i class="pi pi-envelope mr-2"></i>
+                    <span>contato@egedoc.com.br</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+ </form>
+</div>
+
+<app-footer></app-footer>

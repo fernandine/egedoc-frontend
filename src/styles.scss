@@ -1,0 +1,22 @@
+/* You can add global styles to this file, and also import other style files */
+@import 'primeng/resources/themes/mdc-light-indigo/theme.css';
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
+
+@import "primeflex/primeflex.scss";
+@import "@fortawesome/fontawesome-free/css/all.min.css";
+//npm i --save @fortawesome/fontawesome-free
+
+
+* {
+  margin: 0;
+  max-width: 100%;
+  font-family: Arial, Helvetica, sans-serif;
+}
+body {
+  background-color: rgba(255, 255, 255, 0.842);
+}
+
+:root {
+  --primary-color:#fedc00;
+}
