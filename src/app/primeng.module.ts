@@ -63,6 +63,10 @@ import { ImageModule } from 'primeng/image';
 import { SplitterModule } from 'primeng/splitter';
 import { RadioButtonModule } from 'primeng/radiobutton';
 import { TimelineModule } from 'primeng/timeline';
+import { FileUploadModule } from 'primeng/fileupload';
+import { TagModule } from 'primeng/tag';
+import { ToastModule } from 'primeng/toast';
+
 
 @NgModule({
   exports: [
@@ -75,8 +79,11 @@ import { TimelineModule } from 'primeng/timeline';
     TimelineModule,
     AvatarModule,
     SplitterModule,
+    ToastModule,
     DividerModule,
+    FileUploadModule,
     ListboxModule,
+    TagModule,
     MultiSelectModule,
     SliderModule,
     DropdownModule,

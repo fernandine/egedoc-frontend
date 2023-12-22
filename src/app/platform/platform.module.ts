@@ -9,6 +9,10 @@ import { FolderListComponent } from './folder-list/folder-list.component';
 import { DocumentListComponent } from './document-list/document-list.component';
 import { DocumentFormComponent } from './document-form/document-form.component';
 import { FolderFormComponent } from './folder-form/folder-form.component';
+import { InsertDocumentComponent } from './insert-document/insert-document.component';
+import {MatCardModule} from '@angular/material/card';
+import {MatTableModule} from '@angular/material/table';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -17,6 +21,7 @@ import { FolderFormComponent } from './folder-form/folder-form.component';
     DocumentListComponent,
     DocumentFormComponent,
     FolderFormComponent,
+    InsertDocumentComponent,
 
   ],
   imports: [
@@ -24,7 +29,13 @@ import { FolderFormComponent } from './folder-form/folder-form.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
-    PrimengModule
+    PrimengModule,
+
+    MatCardModule,
+    MatTableModule,
+    DragDropModule
+
+
   ]
 })
 export class PlatformModule { }

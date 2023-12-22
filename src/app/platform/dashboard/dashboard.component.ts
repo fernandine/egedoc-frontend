@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+import { InsertDocumentComponent } from '../insert-document/insert-document.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -6,5 +7,13 @@ import { Component } from '@angular/core';
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent {
+  showInsertDocument: boolean = false;
+
+  @ViewChild('insertDocument') insertDocument!: InsertDocumentComponent;
+
+  addDocument(): void {
+    this.showInsertDocument = true;
+
+  }
 
 }

@@ -1,1 +1,147 @@
-<p>folder-list works!</p>
+
+<div class="card p-3">
+  <p-toast></p-toast>
+  <p-toolbar styleClass="mb-4 gap-2">
+      <ng-template pTemplate="left">
+          <button pButton pRipple label="Nova Pasta" icon="pi pi-plus mr-2" class="p-button-success mr-2" (click)="openNew()"></button>
+          <button pButton pRipple label="Apagar" icon="pi pi-trash mr-2" class="p-button-danger" (click)="deleteSelectedFolders()" [disabled]="!selected || !selected.length"></button>
+      </ng-template>
+
+      <ng-template pTemplate="right">
+          <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Importar" class="mr-2 inline-block"></p-fileUpload>
+          <button pButton pRipple label="Exportar" icon="pi pi-upload mr-2" class="ml-3 p-button-help"></button>
+      </ng-template>
+  </p-toolbar>
+
+  <p-table
+      #dt
+      [value]="folders"
+      [rows]="10"
+      [paginator]="true"
+      [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+      [tableStyle]="{ 'min-width': '75rem' }"
+      [(selection)]="selected"
+      [rowHover]="true"
+      dataKey="id"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      [showCurrentPageReport]="true"
+  >
+      <ng-template pTemplate="caption">
+          <div class="flex align-items-center justify-content-between">
+              <h5 class="m-0">Manage Products</h5>
+          </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+          <tr>
+              <th style="width: 4rem">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th>
+              <th></th>
+              <th pSortableColumn="name" style="min-width:15rem">Nome <p-sortIcon field="name"></p-sortIcon></th>
+              <th pSortableColumn="price">Data de criação <p-sortIcon field="price"></p-sortIcon></th>
+              <th pSortableColumn="category" style="min-width:10rem">Código <p-sortIcon field="category"></p-sortIcon></th>
+              <th><p>Documentos Integrados</p></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-folder>
+          <tr>
+              <td>
+                  <p-tableCheckbox [value]="folder"></p-tableCheckbox>
+              </td>
+
+              <td><i class="pi pi-folder text-2xl"></i></td>
+              <td (click)="onClickAddDocument(folder)" class="cursor-pointer text-blue-500">{{ folder.name }}</td>
+              <td>{{ folder.creationDate | date:"dd/MM/yyyy" }}</td>
+              <td>{{ folder.code }}</td>
+              <td>{{ folder.documentCount || 0 }}</td>
+              <td><i class="pi pi-thumbs-up"></i></td>
+              <td><i class="pi pi-star"></i></td>
+              <td><i class="pi pi-comment"></i></td>
+              <td><i class="pi pi-share-alt"></i></td>
+
+              <td>
+                  <button pButton pRipple icon="pi pi-bars" class="p-button-rounded p-button-warning" (click)="deleteProduct(folder)"></button>
+              </td>
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="summary">
+          <div class="flex align-items-center justify-content-between">Total de pastas: {{ folders ? folders.length : 0 }}</div>
+      </ng-template>
+  </p-table>
+</div>
+
+
+
+
+
+<!-- <p-dialog [(visible)]="productDialog" [style]="{ width: '450px' }" header="Product Details" [modal]="true" styleClass="p-fluid">
+  <ng-template pTemplate="content">
+      <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + folder.image" [alt]="folder.image" class="block m-auto pb-3" *ngIf="product.image" />
+      <div class="field">
+          <label for="name">Name</label>
+          <input type="text" pInputText id="name" [(ngModel)]="folder.name" required autofocus />
+          <small class="p-error" *ngIf="submitted && !folder.name">Name is required.</small>
+      </div>
+      <div class="field">
+          <label for="description">Description</label>
+          <textarea id="description" pInputTextarea [(ngModel)]="folder.name" required rows="3" cols="20"></textarea>
+      </div>
+
+      <div class="field">
+          <label for="inventoryStatus">Inventory Status</label>
+          <p-dropdown [(ngModel)]="folder.inventoryStatus" inputId="inventoryStatus" [options]="statuses">
+              <ng-template pTemplate="selectedItem">
+                  <p-tag [value]="folder.inventoryStatus.toUpperCase()" [severity]="getSeverity(folder.inventoryStatus.toUpperCase())"></p-tag>
+              </ng-template>
+              <ng-template let-option pTemplate="item">
+                  <p-tag [value]="option.label" [severity]="getSeverity(option.label)"></p-tag>
+              </ng-template>
+          </p-dropdown>
+      </div>
+
+      <div class="field">
+          <label class="mb-3">Category</label>
+          <div class="formgrid grid">
+              <div class="field-radiobutton col-6">
+                  <p-radioButton id="category1" name="category" value="Accessories" [(ngModel)]="folder.category"></p-radioButton>
+                  <label for="category1">Accessories</label>
+              </div>
+              <div class="field-radiobutton col-6">
+                  <p-radioButton id="category2" name="category" value="Clothing" [(ngModel)]="folder.category"></p-radioButton>
+                  <label for="category2">Clothing</label>
+              </div>
+              <div class="field-radiobutton col-6">
+                  <p-radioButton id="category3" name="category" value="Electronics" [(ngModel)]="folder.category"></p-radioButton>
+                  <label for="category3">Electronics</label>
+              </div>
+              <div class="field-radiobutton col-6">
+                  <p-radioButton id="category4" name="category" value="Fitness" [(ngModel)]="folder.category"></p-radioButton>
+                  <label for="category4">Fitness</label>
+              </div>
+          </div>
+      </div>
+
+      <div class="formgrid grid">
+          <div class="field col">
+              <label for="price">Data de criação</label>
+              <p-inputNumber id="price" [(ngModel)]="folder.data" mode="currency" currency="USD" locale="en-US"></p-inputNumber>
+          </div>
+          <div class="field col">
+              <label for="quantity">Código</label>
+              <p-inputNumber id="quantity" [(ngModel)]="folder.code"></p-inputNumber>
+          </div>
+      </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+      <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+      <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveProduct()"></button>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog> -->

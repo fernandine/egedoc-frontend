@@ -1,0 +1,21 @@
+.drag-drop-container {
+  width: 300px;
+  margin: 20px auto;
+  text-align: center;
+  padding: 20px;
+  border: 2px dashed #ccc;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.drag-drop-container p {
+  margin: 0;
+  color: #555;
+}
+
+mat-card-title {
+  font-weight: bold;
+  color: #ecc904;
+}

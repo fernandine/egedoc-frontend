@@ -23,7 +23,7 @@ import { VacanciesComponent } from './vacancies/vacancies.component';
 import { PlansPricesComponent } from './plans-prices/plans-prices.component';
 import { CustomerServiceComponent } from './customer-service/customer-service.component';
 import { AboutPageComponent } from './about-page/about-page.component';
-import { PortalComponent } from './portal/portal.component';
+import { ComponentRoutingModule } from './component-routing.module';
 
 @NgModule({
   declarations: [
@@ -47,11 +47,12 @@ import { PortalComponent } from './portal/portal.component';
     PartnersComponent,
     CustomerServiceComponent,
     AboutPageComponent,
-    PortalComponent
+
   ],
   imports: [
     CommonModule,
     PrimengModule,
+    ComponentRoutingModule,
     ReactiveFormsModule,
     ToastModule
   ],

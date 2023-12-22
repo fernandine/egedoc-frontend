@@ -1,0 +1,130 @@
+<mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+  <ng-container matColumnDef="arquivo">
+    <mat-header-cell *matHeaderCellDef> Arquivo </mat-header-cell>
+    <mat-cell *matCellDef="let file"> {{ file.name }} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="tamanho">
+    <mat-header-cell *matHeaderCellDef> Tamanho </mat-header-cell>
+    <mat-cell *matCellDef="let file"> {{ formatFileSize(file.size) }} </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
+
+
+<!-- <div class="card p-3">
+  <p-toast></p-toast>
+  <p-toolbar styleClass="mb-4 gap-2">
+      <ng-template pTemplate="left">
+          <button pButton pRipple label="Nova Pasta" icon="pi pi-plus mr-2" class="p-button-success mr-2" (click)="openNew()"></button>
+          <button pButton pRipple label="Apagar" icon="pi pi-trash mr-2" class="p-button-danger" (click)="deleteSelectedDocuments()" [disabled]="!selected || !selected.length"></button>
+      </ng-template>
+
+      <ng-template pTemplate="right">
+          <p-fileUpload mode="basic" accept="image/*" [maxFileSize]="1000000" label="Import" chooseLabel="Importar" class="mr-2 inline-block"></p-fileUpload>
+          <button pButton pRipple label="Exportar" icon="pi pi-upload mr-2" class="ml-3 p-button-help"></button>
+      </ng-template>
+  </p-toolbar>
+
+  <div pDroppable (onDrop)="onDrop($event)">
+
+  <p-table
+      #dt
+      [value]="documents"
+      [rows]="10"
+      [paginator]="true"
+      [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+      [tableStyle]="{ 'min-width': '75rem' }"
+      [(selection)]="selected"
+      [rowHover]="true"
+      dataKey="id"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      [showCurrentPageReport]="true"
+  >
+      <ng-template pTemplate="caption">
+          <div class="flex align-items-center justify-content-between">
+              <h5 class="m-0">Manage Products</h5>
+          </div>
+      </ng-template>
+
+      <ng-template pTemplate="header">
+          <tr>
+              <th style="width: 4rem">
+                  <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+              </th>
+              <th></th>
+              <th pSortableColumn="title" style="min-width:15rem">Título <p-sortIcon field="title"></p-sortIcon></th>
+              <th pSortableColumn="creationDate">Data de criação <p-sortIcon field="creationDate"></p-sortIcon></th>
+              <th pSortableColumn="code" style="min-width:10rem">Código <p-sortIcon field="code"></p-sortIcon></th>
+              <th></th>
+              <th></th>
+              <th></th>
+              <th></th>
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-documents>
+          <tr (click)="onClickAddDocument()">
+              <td>
+                  <p-tableCheckbox [value]="document"></p-tableCheckbox>
+              </td>
+              <td><i class="pi pi-folder text-2xl"></i></td>
+              <td>{{ document.title }}</td>
+              <td>{{ document.creationDate | date:"dd/MM/yyyy" }}</td>
+              <td>{{ document.code }}</td>
+              <td><i class="pi pi-thumbs-up"></i></td>
+              <td><i class="pi pi-star"></i></td>
+              <td><i class="pi pi-comment"></i></td>
+              <td><i class="pi pi-share-alt"></i></td>
+
+              <td>
+                  <button pButton pRipple icon="pi pi-bars" class="p-button-rounded p-button-warning" (click)="deleteProduct(document)"></button>
+              </td>
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="summary">
+          <div class="flex align-items-center justify-content-between">Total de pastas: {{ documents ? documents.length : 0 }}</div>
+      </ng-template>
+  </p-table>
+<div>
+
+  <!----------- UPLOAD ----------->
+  <!--ng-template pTemplate="right">
+    <div pDroppable (onDrop)="onFileDrop($event)" class="drag-drop-container">
+      <i class="pi pi-upload text-2xl"></i>
+      <div>
+        <p>Arraste e solte arquivos aqui para fazer o upload.</p>
+      </div>
+    </div>
+    <p-fileUpload
+      mode="basic"
+      accept="image/*"
+      [maxFileSize]="1000000"
+      label="Import"
+      chooseLabel="Importar"
+      class="mr-2 inline-block"
+      (onSelect)="onFileSelect($event)"
+    ></p-fileUpload>
+    <button pButton pRipple label="Exportar" icon="pi pi-upload mr-2" class="ml-3 p-button-help"></button>
+  </!--ng-template>
+</div> -->
+<!-- </div> -->
+
+  <mat-card class="drag-drop-container" (dragover)="onDragOver($event)" (drop)="onDrop($event)" (click)="fileInput.click()">
+    <i class="pi pi-upload text-2xl"></i>
+    <mat-card-header>
+      <mat-card-title>Arraste e solte arquivos aqui</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <p>Solte os arquivos nesta área ou clique para fazer o upload.</p>
+    </mat-card-content>
+  </mat-card>
+  <input type="file" #fileInput style="display: none" (change)="onFileInputChange($event)">
+
+
+
+
+
+
