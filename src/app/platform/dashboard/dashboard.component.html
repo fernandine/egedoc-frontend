@@ -7,56 +7,71 @@
               </a>
               <div class="align-items-center flex-grow-1 justify-content-between hidden lg:flex absolute lg:static w-full bg-bluegray-600 left-0 top-100 z-1">
                   <ul class="list-none p-0 m-0 flex lg:align-items-center select-none flex-column lg:flex-row">
-                      <li>
-                          <a pRipple class="flex px-6 p-3 lg:px-3 lg:py-2 align-items-center text-indigo-100 hover:text-indigo-50 hover:bg-bluegray-300 font-medium border-round cursor-pointer transition-colors transition-duration-150">
-                              <i class="pi pi-home mr-2"></i>
-                              <span>Cadastros</span>
-                          </a>
-                      </li>
+                    <li>
+                      <a pRipple class="flex px-6 p-3 lg:px-3 lg:py-2 align-items-center text-indigo-100 hover:text-indigo-50 hover:bg-bluegray-300 font-medium border-round cursor-pointer transition-colors transition-duration-150"
+                          pStyleClass="@next" enterClass="hidden" enterActiveClass="scalein" leaveToClass="hidden" leaveActiveClass="fadeout" [hideOnOutsideClick]="true">
+                          <i class="pi pi-users mr-2"></i>
+                          <span>Cadastros</span>
+                          <i class="pi pi-angle-down ml-auto lg:ml-3"></i>
+                      </a>
+                      <ul class="list-none py-3 px-6 m-0 lg:px-0 lg:py-0 border-round shadow-0 lg:border-1 border-50 lg:shadow-2 lg:absolute surface-overlay hidden origin-top w-full lg:w-15rem cursor-pointer">
+                          <li>
+                              <a pRipple class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
+                                  <span class="font-medium">Add New</span>
+                              </a>
+                          </li>
+                          <li>
+                            <a pRipple class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
+                                <span class="font-medium">Add New</span>
+                            </a>
+                        </li>
+                      </ul>
+                  </li>
                       <li>
                           <a pRipple class="flex px-6 p-3 lg:px-3 lg:py-2 align-items-center text-indigo-100 hover:text-indigo-50 hover:bg-bluegray-300 font-medium border-round cursor-pointer transition-colors transition-duration-150"
                               pStyleClass="@next" enterClass="hidden" enterActiveClass="scalein" leaveToClass="hidden" leaveActiveClass="fadeout" [hideOnOutsideClick]="true">
-                              <i class="pi pi-users mr-2"></i>
-                              <span>Customers</span>
+                              <i class="pi pi-box mr-2"></i>
+                              <span>Processos</span>
                               <i class="pi pi-angle-down ml-auto lg:ml-3"></i>
                           </a>
                           <ul class="list-none py-3 px-6 m-0 lg:px-0 lg:py-0 border-round shadow-0 lg:border-1 border-50 lg:shadow-2 lg:absolute surface-overlay hidden origin-top w-full lg:w-15rem cursor-pointer">
                               <li>
                                   <a pRipple class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
-                                      <i class="pi pi-user-plus mr-2"></i>
                                       <span class="font-medium">Add New</span>
                                   </a>
                               </li>
-                              <li class="relative">
-                                  <a pRipple class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150"
-                                      pStyleClass="@next" enterClass="hidden" enterActiveClass="scalein" leaveToClass="hidden" leaveActiveClass="fadeout" [hideOnOutsideClick]="true">
-                                      <i class="pi pi-search mr-2"></i>
-                                      <span class="font-medium">Search</span>
-                                      <i class="pi pi-angle-down ml-auto lg:-rotate-90"></i>
-                                  </a>
-                                  <ul class="list-none py-3 pl-3 m-0 lg:px-0 lg:py-0 border-round shadow-0 lg:border-1 border-50 lg:shadow-2 lg:absolute surface-overlay hidden origin-top w-full lg:w-15rem cursor-pointer left-100 top-0">
-                                      <li>
-                                          <a pRipple class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
-                                              <i class="pi pi-shopping-cart mr-2"></i>
-                                              <span class="font-medium">Purchases</span>
-                                          </a>
-                                      </li>
-                                      <li class="relative">
-                                          <a pRipple class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
-                                              <i class="pi pi-comments mr-2"></i>
-                                              <span class="font-medium">Messages</span>
-                                          </a>
-                                      </li>
-                                  </ul>
-                              </li>
+                              <li>
+                                <a pRipple class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
+                                    <span class="font-medium">Add New</span>
+                                </a>
+                            </li>
                           </ul>
                       </li>
                       <li>
-                          <a pRipple class="flex px-6 p-3 lg:px-3 lg:py-2 align-items-center text-indigo-100 hover:text-indigo-50 hover:bg-bluegray-300 font-medium border-round cursor-pointer transition-colors transition-duration-150">
-                              <i class="pi pi-calendar mr-2"></i>
-                              <span>Ferramentas</span>
-                          </a>
-                      </li>
+                        <a pRipple class="flex px-6 p-3 lg:px-3 lg:py-2 align-items-center text-indigo-100 hover:text-indigo-50 hover:bg-bluegray-300 font-medium border-round cursor-pointer transition-colors transition-duration-150"
+                            pStyleClass="@next" enterClass="hidden" enterActiveClass="scalein" leaveToClass="hidden" leaveActiveClass="fadeout" [hideOnOutsideClick]="true">
+                            <i class="pi pi-wrench mr-2"></i>
+                            <span>Ferramentas</span>
+                            <i class="pi pi-angle-down ml-auto lg:ml-3"></i>
+                        </a>
+                        <ul class="list-none py-3 px-6 m-0 lg:px-0 lg:py-0 border-round shadow-0 lg:border-1 border-50 lg:shadow-2 lg:absolute surface-overlay hidden origin-top w-full lg:w-15rem cursor-pointer">
+                            <li>
+                                <a pRipple class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
+                                    <span class="font-medium">Integração</span>
+                                </a>
+                            </li>
+                            <li>
+                              <a pRipple class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
+                                  <span class="font-medium">Alertas e Notificações</span>
+                              </a>
+                          </li>
+                          <li>
+                            <a pRipple class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
+                                <span class="font-medium">Segurança e Backup</span>
+                            </a>
+                        </li>
+                        </ul>
+                    </li>
                       <li>
                           <a pRipple class="flex px-6 p-3 lg:px-3 lg:py-2 align-items-center text-indigo-100 hover:text-indigo-50 hover:bg-bluegray-300 font-medium border-round cursor-pointer transition-colors transition-duration-150">
                               <i class="pi pi-chart-line mr-2"></i>
@@ -68,7 +83,7 @@
                       <li class="mr-5">
                         <span class="p-input-icon-right w-full">
                             <i class="pi pi-search"></i>
-                            <input type="text" pInputText placeholder="Search" class="w-full"/>
+                            <input type="text" pInputText placeholder="Pesquisar" class="w-full"/>
                         </span>
                       </li>
 
@@ -84,12 +99,12 @@
                               <span class="block lg:hidden font-medium">Notifications</span>
                           </a>
                       </li>
-                      <li class="border-top-1 border-indigo-400 lg:border-top-none">
+                      <li *ngFor="let user of users" class="border-top-1 border-indigo-400 lg:border-top-none">
                           <a pRipple class="flex px-6 p-3 lg:px-3 lg:py-2 align-items-center hover:bg-indigo-600 font-medium border-round cursor-pointer transition-colors transition-duration-150">
-                              <img src="assets/images/blocks/avatars/circle/avatar-f-1.png" class="mr-3 lg:mr-0" style="width: 32px; height: 32px"/>
-                              <div class="block lg:hidden">
-                                  <div class="text-indigo-50 font-medium">Josephine Lillard</div>
-                                  <span class="text-indigo-100 font-medium text-sm">Marketing Specialist</span>
+                            <img [src]="user.avatar" alt="Avatar" class="mr-3 lg:mr-0" style="width: 32px; height: 32px" />
+                            <div class="block lg:hidden">
+                                  <div class="text-indigo-50 font-medium">{{user.name}}</div>
+                                  <span class="text-indigo-100 font-medium text-sm">{{user.departmentProfile}}</span>
                               </div>
                           </a>
                       </li>
@@ -120,9 +135,13 @@
 
 
       <div class="p-5 flex flex-column flex-auto" style="margin-top: -8rem">
-          <div class="border-1 border-double text-yellow-500 border-round surface-section flex-auto">
-    <app-folder-list *ngIf="!showInsertDocument" (addDocumentEvent)="addDocument()"></app-folder-list>
-    <app-insert-document *ngIf="showInsertDocument"  #insertDocument> </app-insert-document>
-          </div>
+        <div class="border-1 border-double text-yellow-500 border-round surface-section flex-auto">
+          <app-folder-list *ngIf="showFolders" (click)="toggleComponents()"></app-folder-list>
+
+          <ng-container *ngIf="showDocuments">
+            <app-insert-document (addDocument)="addDocument()"></app-insert-document>
+          </ng-container>
+        </div>
+
       </div>
   </div>

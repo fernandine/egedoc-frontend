@@ -13,7 +13,7 @@ export class UserService {
 
   private http = inject(HttpClient);
 
-  getAddresses(): Observable<User[]> {
+  list(): Observable<User[]> {
     return this.http.get<User[]>(this.apiUrl);
   }
 
@@ -22,15 +22,15 @@ export class UserService {
     return this.http.get<User[]>(url);
   }
 
-  createAddress(address: User): Observable<User> {
+  create(address: User): Observable<User> {
     return this.http.post<User>(this.apiUrl, address);
   }
 
-  updateAddress(id:string, value: any): Observable<User> {
+  update(id:string, value: any): Observable<User> {
     return this.http.put<User>(`${this.apiUrl}/${id}`, value);
   }
 
-  deleteAddress(id: string): Observable<void> {
+  delete(id: string): Observable<void> {
     const url = `${this.apiUrl}/${id}`;
     return this.http.delete<void>(url);
   }

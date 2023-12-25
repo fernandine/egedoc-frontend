@@ -13,7 +13,7 @@ export class TesterService {
 
   private http = inject(HttpClient);
 
-  get(): Observable<Tester[]> {
+  list(): Observable<Tester[]> {
     return this.http.get<Tester[]>(this.apiUrl);
   }
 

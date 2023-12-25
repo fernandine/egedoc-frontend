@@ -1,5 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
-import { InsertDocumentComponent } from '../insert-document/insert-document.component';
+import { Component } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { User } from 'src/app/common/user';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -7,13 +9,35 @@ import { InsertDocumentComponent } from '../insert-document/insert-document.comp
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent {
-  showInsertDocument: boolean = false;
+  users: User[] = [];
 
-  @ViewChild('insertDocument') insertDocument!: InsertDocumentComponent;
+  showFolders: boolean = true;
+  showDocuments: boolean = false;
 
-  addDocument(): void {
-    this.showInsertDocument = true;
+  constructor(
+    private userService: UserService,
+    private route: ActivatedRoute
+  ) { }
 
+  ngOnInit(): void {
+    const userId = this.route.snapshot.paramMap.get('id');
+
+    if (userId) {
+      this.userService.getById(userId).subscribe((user) => {
+        this.users = user;
+        console.log(user); // Aqui você pode ver todas as informações disponíveis
+      });
+    }
   }
 
-}
+    toggleComponents(): void {
+      this.showFolders = !this.showFolders;
+      this.showDocuments = !this.showDocuments;
+    }
+
+    addDocument(): void {
+      this.showFolders = false;
+      this.showDocuments = true;
+    }
+
+  }

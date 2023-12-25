@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { Folder } from 'src/app/common/folder';
 import { DocumentService } from 'src/app/services/document.service';
@@ -11,7 +11,6 @@ import { FolderService } from 'src/app/services/folder.service';
   styleUrls: ['./folder-list.component.scss']
 })
 export class FolderListComponent {
-  @Output() addDocumentEvent = new EventEmitter<void>();
 
   productDialog: boolean = false;
 
@@ -30,7 +29,8 @@ export class FolderListComponent {
     private documentService: DocumentService,
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
     ) { }
 
   ngOnInit() {
@@ -40,7 +40,7 @@ export class FolderListComponent {
   loadFolders(page: number = 0, size: number = 10) {
     this.folderService.list(page, size).subscribe((data) => {
       this.folders = data.content.flat();
-      this.updateFolderDocumentCount(); // Atualize a contagem de documentos associados a cada pasta
+      this.updateFolderDocumentCount();
     });
   }
 
@@ -53,13 +53,10 @@ export class FolderListComponent {
   }
 
   onClickAddDocument(folder: Folder): void {
-    const folderId = folder.id;
-    this.router.navigate(['/upload-documento', folderId]);
+  this.router.navigate(['/documents', folder.id], { relativeTo: this.route });
   }
 
-
   openNew() {
-    //this.folder = {};
     this.submitted = false;
     this.productDialog = true;
   }

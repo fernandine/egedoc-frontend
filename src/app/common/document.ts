@@ -20,6 +20,7 @@ export interface Document {
   code: string;
   metadata: string;
 
+  fileUri: string;
   documentType: DocumentType;
   approvalStatus: ApprovalStatus;
   accessPermission: AccessPermission;

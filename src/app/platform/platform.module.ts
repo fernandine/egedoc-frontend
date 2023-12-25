@@ -10,9 +10,8 @@ import { DocumentListComponent } from './document-list/document-list.component';
 import { DocumentFormComponent } from './document-form/document-form.component';
 import { FolderFormComponent } from './folder-form/folder-form.component';
 import { InsertDocumentComponent } from './insert-document/insert-document.component';
-import {MatCardModule} from '@angular/material/card';
-import {MatTableModule} from '@angular/material/table';
-import {DragDropModule} from '@angular/cdk/drag-drop';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { AccessListModalComponent } from './access-list-modal/access-list-modal.component';
 
 @NgModule({
   declarations: [
@@ -22,20 +21,15 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     DocumentFormComponent,
     FolderFormComponent,
     InsertDocumentComponent,
+    AccessListModalComponent,
 
   ],
   imports: [
     CommonModule,
-    AppRoutingModule,
     BrowserAnimationsModule,
     ReactiveFormsModule,
     PrimengModule,
-
-    MatCardModule,
-    MatTableModule,
-    DragDropModule
-
-
-  ]
+  ],
+  providers: [ConfirmationService, MessageService]
 })
 export class PlatformModule { }

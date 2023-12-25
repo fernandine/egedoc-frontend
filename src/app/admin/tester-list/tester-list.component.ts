@@ -14,7 +14,7 @@ export class TesterListComponent {
   constructor(private testerService: TesterService) {}
 
   ngOnInit() {
-    this.testerService.get().subscribe(
+    this.testerService.list().subscribe(
       (data: Tester[]) => {
         this.testers = data;
         console.log(this.testers);  // Aqui você tem acesso à lista de testers
