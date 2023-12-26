@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
 import { Document } from 'src/app/common/document';
 import { DocumentService } from 'src/app/services/document.service';
-import { AccessListModalComponent } from '../access-list-modal/access-list-modal.component';
+import { User } from 'src/app/common/user';
+import { Folder } from 'src/app/common/folder';
 
 @Component({
   selector: 'app-insert-document',
@@ -11,28 +12,47 @@ import { AccessListModalComponent } from '../access-list-modal/access-list-modal
   styleUrls: ['./insert-document.component.scss']
 })
 export class InsertDocumentComponent {
+  @Output() addProperties: EventEmitter<void> = new EventEmitter<void>();
 
   documents: Document[] = [];
   folderId: string = '';
   visible: boolean = false;
-  accessListModalComponent!: AccessListModalComponent;
   document!: Document;
   selected!: Document[] | null;
   submitted: boolean = false;
   statuses!: any[];
+  items: MenuItem[] | undefined;
 
+users: User[] = [];
   constructor(
     private documentService: DocumentService,
     private route: ActivatedRoute,
     private messageService: MessageService,
-     private confirmationService: ConfirmationService
+    private confirmationService: ConfirmationService,
+    private router: Router,
     ) {}
-
 
   ngOnInit(): void {
     this.folderId = this.route.snapshot.paramMap.get('folderId') || '';
     this.refreshDocumentList(this.folderId);
-  }
+    this.items = [
+      {
+          items: [
+              {
+                  label: 'Propriedades',
+                  command: () => this.navigateToPropertiesPage(),
+              },
+              {
+                  label: 'Delete',
+                  icon: 'pi pi-times',
+              }
+          ]
+      }]
+    }
+
+    navigateToPropertiesPage(): void {
+      this.addProperties.emit();
+    }
 
   openNew() {
     this.submitted = false;
@@ -109,13 +129,12 @@ export class InsertDocumentComponent {
   showAccessList(document: Document): void {
     const documentId = parseInt(document.id);
 
-    this.documentService.getUsersWhoAccessedDocument(documentId)
+    this.documentService.getAccessedUsers(documentId)
       .subscribe(users => {
-        this.accessListModalComponent.users = users;
-        this.accessListModalComponent.visible = true;
+        this.users = users;
+        this.visible = true;
       });
   }
-
 
   deleteDocument(document: Document) {
     this.confirmationService.confirm({

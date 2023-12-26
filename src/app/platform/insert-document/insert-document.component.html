@@ -41,6 +41,7 @@
           <th></th>
           <th></th>
           <th></th>
+          <th></th>
         </tr>
       </ng-template>
       <ng-template pTemplate="body" let-document>
@@ -59,23 +60,10 @@
           <td><i class="pi pi-share-alt"></i></td>
 
           <td>
-            <button pButton pRipple pStyleClass="#slideover-2" icon="pi pi-bars" class="p-button-rounded p-button-warning"
-            enterClass="hidden" enterActiveClass="fadeinright" leaveToClass="hidden" leaveActiveClass="fadeoutright" [hideOnOutsideClick]="true"></button>
-          </td>
+            <p-menu appendTo="body" #menu [model]="items" [popup]="true"></p-menu>
+            <button pButton pRipple (click)="menu.toggle($event)" icon="pi pi-bars" class="p-button-rounded p-button-warning"></button>
+           </td>
         </tr>
-
-        <div containerClass="flex align-items-start justify-content-end px-4 py-8 md:px-6 lg:px-8 relative overflow-hidden">
-          <div id="slideover-2" class="hidden surface-overlay absolute top-0 right-0 shadow-2 w-18rem h-full">
-              <div class="flex flex-column h-full p-4">
-                  <div class="flex align-items-center justify-content-between mb-4">
-                      <span class="text-900 text-xl font-medium">Title Placeholder</span>
-                      <button pButton pRipple icon="pi pi-times" class="p-button-rounded p-button-text p-button-plain" pStyleClass="#slideover-2" leaveToClass="hidden" leaveActiveClass="fadeoutright"></button>
-                  </div>
-                  <div class="border-2 border-dashed surface-border flex-auto overflow-y-auto p-3"></div>
-              </div>
-          </div>
-      </div>
-
 
       </ng-template>
       <ng-template pTemplate="summary">
@@ -100,4 +88,8 @@
 <br><br>
 
 
-
+<p-dialog header="Lista de Acesso" [(visible)]="visible" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false">
+  <ul *ngFor="let user of users">
+    <li>{{ user.name }}</li>
+  </ul>
+</p-dialog>

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
+import { ConfirmationService, MessageService } from 'primeng/api';
 import { Folder } from 'src/app/common/folder';
 import { DocumentService } from 'src/app/services/document.service';
 import { FolderService } from 'src/app/services/folder.service';
@@ -11,6 +11,7 @@ import { FolderService } from 'src/app/services/folder.service';
   styleUrls: ['./folder-list.component.scss']
 })
 export class FolderListComponent {
+  @Output() addDocument: EventEmitter<Folder> = new EventEmitter<Folder>();
 
   productDialog: boolean = false;
 
@@ -31,10 +32,14 @@ export class FolderListComponent {
     private confirmationService: ConfirmationService,
     private router: Router,
     private route: ActivatedRoute,
-    ) { }
+  ) { }
 
   ngOnInit() {
     this.loadFolders();
+  }
+
+  onClickAddDocument(folder: Folder): void {
+    this.addDocument.emit(folder);
   }
 
   loadFolders(page: number = 0, size: number = 10) {
@@ -44,6 +49,7 @@ export class FolderListComponent {
     });
   }
 
+
   updateFolderDocumentCount() {
     for (const folder of this.folders) {
       this.documentService.getDocumentCountByFolder(folder.id).subscribe((count) => {
@@ -52,9 +58,7 @@ export class FolderListComponent {
     }
   }
 
-  onClickAddDocument(folder: Folder): void {
-  this.router.navigate(['/documents', folder.id], { relativeTo: this.route });
-  }
+
 
   openNew() {
     this.submitted = false;

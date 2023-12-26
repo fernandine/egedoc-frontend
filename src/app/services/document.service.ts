@@ -27,8 +27,8 @@ export class DocumentService {
     return this.http.get<Page<Document[]>>(this.apiUrl, { params });
   }
 
-  getUsersWhoAccessedDocument(documentId: number): Observable<User[]> {
-    const url = `${this.apiUrl}/users/${documentId}`;
+  getAccessedUsers(documentId: number): Observable<User[]> {
+    const url = `${this.apiUrl}/${documentId}/accessed-users`;
     return this.http.get<User[]>(url);
   }
 

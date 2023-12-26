@@ -1,3 +1,4 @@
+import { Department } from "./department";
 import { DepartmentProfile } from "./enums/department-profile.enum";
 import { Role } from "./role";
 
@@ -9,7 +10,18 @@ export interface User {
   email: string;
   password: string;
   phone: string;
+  position:string;
   avatar: string;
+
+  cep: string;
+  logradouro: string;
+  complemento: string;
+  bairro: string;
+  localidade: string;
+  uf: string;
+
+
   roles: Role[];
   departmentProfile: DepartmentProfile;
+  department: Department;
 }

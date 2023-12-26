@@ -1,10 +1,12 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { DashboardComponent } from './platform/dashboard/dashboard.component';
+import { DocumentPropertiesComponent } from './platform/document-properties/document-properties.component';
+import { FolderListComponent } from './platform/folder-list/folder-list.component';
+import { InsertDocumentComponent } from './platform/insert-document/insert-document.component';
 
 const routes: Routes = [
 
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
     path: 'home',
     loadChildren: () => import('./components/component.module').then(m => m.ComponentModule)
@@ -12,10 +14,11 @@ const routes: Routes = [
 
   //########## PLATAFORMA ################
 
-  { path: 'dashboard', component: DashboardComponent },
-  { path: 'documents/:folderId', component: DashboardComponent },
-  { path: '**', redirectTo: 'home' }
-
+  { path: 'dashboard', component: DashboardComponent, children: [
+    { path: 'folders', component: FolderListComponent },
+    { path: 'folders/:id', component: InsertDocumentComponent },
+    { path: 'properties', component: DocumentPropertiesComponent },
+  ]},
 
 ];
 
