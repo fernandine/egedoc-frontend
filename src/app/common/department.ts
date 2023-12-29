@@ -1,4 +1,3 @@
-import { DocumentAccess } from "./document-access";
 import { User } from "./user";
 
 export interface Department {
@@ -10,5 +9,4 @@ export interface Department {
   members: User[];
   manager: User;
   documents: Document[];
-  documentAccessList: DocumentAccess[];
 }

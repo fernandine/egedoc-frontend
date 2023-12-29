@@ -15,29 +15,37 @@ export class DocumentService {
 
   private http = inject(HttpClient);
 
-  list(folderId: string | null, page: number = 0, size: number = 10): Observable<Page<Document[]>> {
-    let params = new HttpParams()
+  list(page: number = 0, size: number = 10): Observable<Page<Document[]>> {
+    const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
 
-    if (folderId) {
-      params = params.set('folderId', folderId);
-    }
-
     return this.http.get<Page<Document[]>>(this.apiUrl, { params });
   }
+
+  // list(folderId: string | null, page: number = 0, size: number = 10): Observable<Page<Document[]>> {
+  //   let params = new HttpParams()
+  //     .set('page', page.toString())
+  //     .set('size', size.toString());
+
+  //   if (folderId) {
+  //     params = params.set('folderId', folderId);
+  //   }
+
+  //   return this.http.get<Page<Document[]>>(this.apiUrl, { params });
+  // }
 
   getAccessedUsers(documentId: number): Observable<User[]> {
     const url = `${this.apiUrl}/${documentId}/accessed-users`;
     return this.http.get<User[]>(url);
   }
 
-  loadById(id: string): Observable<Document[]> {
+  loadById(id: string): Observable<Document> {
     const url = `${this.apiUrl}/${id}`;
-    return this.http.get<Document[]>(url);
+    return this.http.get<Document>(url);
   }
 
-  getDocumentCountByFolder(folderId: string): Observable<string> {
+  getDocumentCountByFolder(folderId: number): Observable<string> {
     const url = `${this.apiUrl}/count?id=${folderId}`;
     return this.http.get<string>(url);
   }
@@ -46,17 +54,17 @@ export class DocumentService {
     return this.http.post<Document>(this.apiUrl, doc);
   }
 
-  uploadFile(file: File, folderId: string): Observable<Document[]> {
+  uploadFile(file: File, folderId: number): Observable<Document> {
     const formData: FormData = new FormData();
     formData.append('file', file);
-    return this.http.post<Document[]>(`${this.apiUrl}/${folderId}/upload`, formData);
+    return this.http.post<Document>(`${this.apiUrl}/${folderId}/upload`, formData);
   }
 
-  update(id:string, value: any): Observable<Document> {
+  update(id:number, value: Document): Observable<Document> {
     return this.http.put<Document>(`${this.apiUrl}/${id}`, value);
   }
 
-  delete(id: string): Observable<void> {
+  delete(id: number): Observable<void> {
     const url = `${this.apiUrl}/${id}`;
     return this.http.delete<void>(url);
   }

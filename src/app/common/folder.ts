@@ -1,7 +1,8 @@
+import { Review } from "./review";
 
 export interface Folder {
 
-  id: string;
+  id: number;
   name: string;
   creationDate: Date;
   code: string;
@@ -9,10 +10,9 @@ export interface Folder {
   folderLike: boolean;
   approver: string;
   responsible: string;
-  //subfolders: Folder[];
-  parentFolderId: number;
-  //review: Review[];
+  review: Review[];
   //documents: Document;
   documentCount?: string;
-
+  subFolders: Folder[];
+  parentId?: number;
 }

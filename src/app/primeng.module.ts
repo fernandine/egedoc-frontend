@@ -20,7 +20,6 @@ import { InputSwitchModule } from 'primeng/inputswitch';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { ListboxModule } from 'primeng/listbox';
-import { MegaMenuModule } from 'primeng/megamenu';
 import { MenuModule } from 'primeng/menu';
 import { MenubarModule } from 'primeng/menubar';
 import { MessagesModule } from 'primeng/messages';
@@ -66,6 +65,7 @@ import { TimelineModule } from 'primeng/timeline';
 import { FileUploadModule } from 'primeng/fileupload';
 import { TagModule } from 'primeng/tag';
 import { ToastModule } from 'primeng/toast';
+import { ChipsModule } from 'primeng/chips';
 
 
 @NgModule({
@@ -83,6 +83,7 @@ import { ToastModule } from 'primeng/toast';
     DividerModule,
     FileUploadModule,
     ListboxModule,
+    ChipsModule,
     TagModule,
     MultiSelectModule,
     SliderModule,
@@ -125,7 +126,6 @@ import { ToastModule } from 'primeng/toast';
     PanelMenuModule,
     StepsModule,
     BreadcrumbModule,
-    MegaMenuModule,
     MenubarModule,
     SlideMenuModule,
     TabMenuModule,

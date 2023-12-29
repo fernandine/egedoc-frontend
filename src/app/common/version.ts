@@ -1,9 +1,11 @@
 import { Document } from "./document";
+import { User } from "./user";
 
 export interface Version {
-  id: number;
-  timestamp: Date;
-  number: number;
-  content: string;
+  id: string;
+  creationDate: Date;
+  code: string;
+  description: string;
   document: Document;
+  user: User;
 }

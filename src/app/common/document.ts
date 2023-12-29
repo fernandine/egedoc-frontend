@@ -1,12 +1,13 @@
 import { Tag } from "primeng/tag";
-import { Version } from "@angular/core";
 import { AccessPermission } from "./access-permission";
 import { ApprovalStatus } from "./enums/approval-status";
 import { DocumentType } from "./enums/document-type";
+import { Confidential } from './enums/confidential.enum';
+import { Version } from "./version";
 
 export interface Document {
 
-  id: string;
+  id: number;
   title: string;
   category: string;
   description: string;
@@ -16,19 +17,19 @@ export interface Document {
   approved: boolean;
   documentLike: boolean;
   digitalSignature: string;
-  imageUrl: string;
   code: string;
   metadata: string;
-
+  confidential: Confidential
+  responsible: string;
+  notify: boolean;
+  allowDownload: boolean;
+  reference: string;
   fileUri: string;
   documentType: DocumentType;
   approvalStatus: ApprovalStatus;
   accessPermission: AccessPermission;
-
+  folderId: number;
   tags: Tag[];
   versions: Version[];
 
-  folderId: number;
-  departmentId: number;
-  userId: number;
 }

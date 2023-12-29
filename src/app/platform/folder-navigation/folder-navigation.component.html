@@ -1,7 +1,6 @@
-<app-header-platform></app-header-platform>>
 
-
-<div class="card p-3">
+<app-header-platform></app-header-platform>
+<div class="card p-5">
   <p-toast></p-toast>
   <p-toolbar styleClass="mb-4 gap-2">
 
@@ -20,7 +19,7 @@
             <li>
               <a pRipple
                 class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
-                <span (click)="onClickCreateFolder()" class="font-medium">Criar Pasta</span>
+                <span (click)="onClickCreateSubFolder()" class="font-medium">Criar Pasta</span>
               </a>
             </li>
             <li>
@@ -50,13 +49,13 @@
     </ng-template>
   </p-toolbar>
 
-  <p-table #dt [value]="folders" [rows]="10" [paginator]="true"
+  <p-table #dt [value]="subFolders" [rows]="10" [paginator]="true"
     [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
     [tableStyle]="{ 'min-width': '75rem' }" [(selection)]="selected" [rowHover]="true" dataKey="id"
     currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
     <ng-template pTemplate="caption">
       <div class="flex align-items-center justify-content-between">
-        <h5 class="m-0">Manage Products</h5>
+        <h5 class="m-0">Subpasta</h5>
       </div>
     </ng-template>
 
@@ -78,20 +77,20 @@
         <th></th>
       </tr>
     </ng-template>
-    <ng-template pTemplate="body" let-folder>
+    <ng-template pTemplate="body" let-subfolders>
       <tr>
         <td>
-          <p-tableCheckbox [value]="folder"></p-tableCheckbox>
+          <p-tableCheckbox [value]="subfolders"></p-tableCheckbox>
         </td>
         <td><i class="pi pi-folder text-2xl"></i></td>
 
-        <td (click)="loadById(folder)" class="cursor-pointer text-blue-500">
-          {{ folder.name }}
+        <td (click)="loadById(subfolders)" class="cursor-pointer text-blue-500">
+          {{ subfolders.name }}
         </td>
 
-        <td>{{ folder.creationDate | date:"dd/MM/yyyy" }}</td>
-        <td>{{ folder.code }}</td>
-        <td>{{ folder.documentCount || 0 }}</td>
+        <td>{{ subfolders.creationDate | date:"dd/MM/yyyy" }}</td>
+        <td>{{ subfolders.code }}</td>
+        <td>{{ subfolders.documentCount || 0 }}</td>
         <td><i class="pi pi-thumbs-up"></i></td>
         <td><i class="pi pi-star"></i></td>
         <td><i class="pi pi-comment"></i></td>
@@ -129,15 +128,8 @@
       </tr>
     </ng-template>
     <ng-template pTemplate="summary">
-      <div class="flex align-items-center justify-content-between">Total de pastas: {{ folders ? folders.length : 0 }}
+      <div class="flex align-items-center justify-content-between">Total de pastas: {{ subFolders ? subFolders.length : 0 }}
       </div>
     </ng-template>
   </p-table>
 </div>
-
-
-<!-- <p-dialog header="Nova Pasta" [(visible)]="visibleFolder" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false">
-  <ul *ngFor="let folder of folders">
-    <li>{{ user.name }}</li>
-  </ul>
-</p-dialog> -->

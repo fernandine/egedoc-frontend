@@ -5,16 +5,20 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { FolderListComponent } from './folder-list/folder-list.component';
-import { InsertDocumentComponent } from './insert-document/insert-document.component';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { DocumentPropertiesComponent } from './document-properties/document-properties.component';
+import { DocumentFormComponent } from './document-form/document-form.component';
+import { FolderNavigationComponent } from './folder-navigation/folder-navigation.component';
+import { HeaderPlatformComponent } from './header-platform/header-platform.component';
 
 @NgModule({
   declarations: [
     DashboardComponent,
     FolderListComponent,
-    InsertDocumentComponent,
     DocumentPropertiesComponent,
+    DocumentFormComponent,
+    FolderNavigationComponent,
+    HeaderPlatformComponent,
 
   ],
   imports: [

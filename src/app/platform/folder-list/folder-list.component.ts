@@ -1,9 +1,11 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
+import { Document } from 'src/app/common/document';
 import { Folder } from 'src/app/common/folder';
 import { DocumentService } from 'src/app/services/document.service';
 import { FolderService } from 'src/app/services/folder.service';
+import { NotificationService } from 'src/app/services/notification.service';
 
 @Component({
   selector: 'app-folder-list',
@@ -11,44 +13,71 @@ import { FolderService } from 'src/app/services/folder.service';
   styleUrls: ['./folder-list.component.scss']
 })
 export class FolderListComponent {
-  @Output() addDocument: EventEmitter<Folder> = new EventEmitter<Folder>();
 
   productDialog: boolean = false;
-
   folders: Folder[] = [];
-
   folder!: Folder;
-
   selected!: Folder[] | null;
-
   submitted: boolean = false;
 
-  statuses!: any[];
+  newFolderName: string = '';
 
   constructor(
     private folderService: FolderService,
     private documentService: DocumentService,
-    private messageService: MessageService,
-    private confirmationService: ConfirmationService,
-    private router: Router,
-    private route: ActivatedRoute,
+    private notificationService: NotificationService,
+    private router: Router
   ) { }
 
   ngOnInit() {
     this.loadFolders();
   }
 
-  onClickAddDocument(folder: Folder): void {
-    this.addDocument.emit(folder);
+  loadById(folder: Folder): void {
+    if (folder.id !== undefined) {
+      this.folderService.loadById(folder.id).subscribe((loadedFolder) => {
+        console.log('Detalhes da pasta carregados:', loadedFolder);
+
+        this.router.navigate(['folders', folder.id]);
+      });
+    } else {
+      console.error('Folder id is undefined.');
+    }
+  }
+
+  onClickCreateFolder(): void {
+    const newFolderData = {
+      id: 0,
+      name: 'Nova Pasta',
+      creationDate: new Date(),
+      code: '',
+      favorite: false,
+      folderLike: false,
+      approver: '',
+      responsible: '',
+      review: [],
+      subFolders: [],
+    };
+
+    this.folderService.create(newFolderData).subscribe(
+      (createdFolder) => {
+
+          this.folder = createdFolder;
+          this.loadFolders();
+
+      },
+      (error) => {
+        console.error('Erro ao criar pasta:', error);
+      }
+    );
   }
 
   loadFolders(page: number = 0, size: number = 10) {
-    this.folderService.list(page, size).subscribe((data) => {
+    this.folderService.listParentfolder(page, size).subscribe((data) => {
       this.folders = data.content.flat();
       this.updateFolderDocumentCount();
     });
   }
-
 
   updateFolderDocumentCount() {
     for (const folder of this.folders) {
@@ -58,80 +87,24 @@ export class FolderListComponent {
     }
   }
 
-
-
-  openNew() {
-    this.submitted = false;
-    this.productDialog = true;
+  deleteFolder(folder: Folder): void {
+    this.folderService.delete(folder.id).subscribe(
+      () => {
+        this.notificationService.success('Pasta excluída com sucesso');
+        this.loadFolders();
+      },
+      (error) => {
+        this.notificationService.error('Erro ao excluir a pasta');
+      }
+    );
   }
 
   deleteSelectedFolders() {
-    this.confirmationService.confirm({
-      message: 'Você tem certeza que deseja cancelar esta pasta?',
-      header: 'Confirmar',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.folders = this.folders.filter((val) => !this.selected?.includes(val));
-        this.selected = null;
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Products Deleted', life: 3000 });
+    if (this.selected && this.selected.length > 0) {
+      for (const folder of this.selected) {
+        this.deleteFolder(folder);
       }
-    });
-  }
-
-  editProduct(folder: Folder) {
-    this.folder = { ...folder };
-    this.productDialog = true;
-  }
-
-  deleteProduct(folder: Folder) {
-    this.confirmationService.confirm({
-      message: 'Are you sure you want to delete ' + folder.name + '?',
-      header: 'Confirm',
-      icon: 'pi pi-exclamation-triangle',
-      accept: () => {
-        this.folders = this.folders.filter((val) => val.id !== folder.id);
-        //this.folder = {};
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
-      }
-    });
-  }
-
-  hideDialog() {
-    this.productDialog = false;
-    this.submitted = false;
-  }
-
-  saveFolder() {
-    this.submitted = true;
-
-    if (this.folder.name?.trim()) {
-      if (this.folder.id) {
-        this.folders[this.findIndexById(this.folder.id)] = this.folder;
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
-      } else {
-        this.folders.push(this.folder);
-        this.messageService.add({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
-      }
-
-      this.folders = [...this.folders];
-      this.productDialog = false;
-      //this.folder = {};
+      this.selected = [];
     }
   }
-
-  findIndexById(id: string): number {
-    let index = -1;
-    for (let i = 0; i < this.folders.length; i++) {
-      if (this.folders[i].id === id) {
-        index = i;
-        break;
-      }
-    }
-
-    return index;
-  }
-
-
-
 }
-

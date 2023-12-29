@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Folder } from 'src/app/common/folder';
 import { User } from 'src/app/common/user';
@@ -32,7 +32,6 @@ export class DashboardComponent {
     }
   }
 
-
   toggleComponents(): void {
     this.showFolders = true;
     this.showDocuments = false;
@@ -40,16 +39,14 @@ export class DashboardComponent {
   }
 
   addDocument(folder: Folder): void {
-    this.router.navigate(['/folders', folder.id], { relativeTo: this.route });
-
+    this.router.navigate(['folders', folder.id]);
     this.showFolders = false;
     this.showDocuments = true;
     this.showProperties = false;
   }
 
   addProperties(): void {
-    this.router.navigate(['/properties'], { relativeTo: this.route });
-
+    this.router.navigate(['properties'], { relativeTo: this.route });
     this.showFolders = false;
     this.showDocuments = false;
     this.showProperties = true;
