@@ -1,9 +1,10 @@
 
 <app-header-platform></app-header-platform>
-<div class="card p-5">
-  <p-toast></p-toast>
-  <p-toolbar styleClass="mb-4 gap-2">
+<!-- <app-breadcrumb [items]="breadcrumbItems"></app-breadcrumb> -->
 
+<div *ngIf="subfolders$ | async as page">
+<div class="card p-2">
+  <p-toolbar styleClass="mb-4 gap-2">
     <ng-template pTemplate="left">
       <ul class="z-5 list-none p-0 m-0 flex lg:align-items-center select-none flex-column lg:flex-row">
         <li>
@@ -49,10 +50,18 @@
     </ng-template>
   </p-toolbar>
 
-  <p-table #dt [value]="subFolders" [rows]="10" [paginator]="true"
-    [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
-    [tableStyle]="{ 'min-width': '75rem' }" [(selection)]="selected" [rowHover]="true" dataKey="id"
-    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+  <p-table [value]="page.folders"
+  [paginator]="true"
+  [first]="first"
+  [rows]="rows"
+  dataKey="id"
+  [rowHover]="true"
+  [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+  [showCurrentPageReport]="true"
+  [tableStyle]="{'min-width': '50rem'}"
+  [rowsPerPageOptions]="[5, 10, 20]"
+  [(selection)]="selected"
+   >
     <ng-template pTemplate="caption">
       <div class="flex align-items-center justify-content-between">
         <h5 class="m-0">Subpasta</h5>
@@ -82,10 +91,15 @@
         <td>
           <p-tableCheckbox [value]="subfolders"></p-tableCheckbox>
         </td>
-        <td><i class="pi pi-folder text-2xl"></i></td>
+        <td (click)="loadById(subfolders)"><i class="pi pi-folder text-2xl"></i></td>
 
-        <td (click)="loadById(subfolders)" class="cursor-pointer text-blue-500">
-          {{ subfolders.name }}
+        <td [class.editing]="subfolders.editing" (click)="cellClick(subfolders)" class="cursor-pointer text-blue-500">
+          <ng-container *ngIf="!subfolders.editing; else editingMode">
+            {{ subfolders.name }}
+          </ng-container>
+          <ng-template #editingMode>
+            <input [(ngModel)]="subfolders.newName" (blur)="disableEditing(subfolders)" (keyup.enter)="disableEditing(subfolders)">
+          </ng-template>
         </td>
 
         <td>{{ subfolders.creationDate | date:"dd/MM/yyyy" }}</td>
@@ -107,7 +121,7 @@
             class="list-none py-0 px-6 m-0 lg:px-0 border-round shadow-0 lg:shadow-2 lg:border-1 border-50 lg:absolute surface-overlay hidden -translate-x-100 origin-top w-full lg:w-12rem cursor-pointer">
             <li>
               <a pRipple
-                class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
+              (click)="enableEditing(subfolders)" class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
                 <span class="font-medium">Renomear</span>
               </a>
             </li>
@@ -120,15 +134,17 @@
             <li>
               <a pRipple
                 class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
-                <span class="font-medium">Propriedades</span>
+                <span (click)="propertiesDocument(subfolders)" class="font-medium">Propriedades</span>
               </a>
             </li>
           </ul>
         </td>
       </tr>
     </ng-template>
+    <div class="card flex justify-content-center">
+    </div>
     <ng-template pTemplate="summary">
-      <div class="flex align-items-center justify-content-between">Total de pastas: {{ subFolders ? subFolders.length : 0 }}
+      <div class="flex align-items-center justify-content-between">Total de subpastas: {{ subFolders ? subFolders.length : 0 }}
       </div>
     </ng-template>
   </p-table>

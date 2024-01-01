@@ -1,36 +1,99 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { SelectionModel } from '@angular/cdk/collections';
+import { Component, Input} from '@angular/core';
+import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
-import { Document } from 'src/app/common/document';
+import { MenuItem } from 'primeng/api';
+import { Observable, catchError, of, tap } from 'rxjs';
 import { Folder } from 'src/app/common/folder';
+import { Page } from 'src/app/common/page';
 import { DocumentService } from 'src/app/services/document.service';
 import { FolderService } from 'src/app/services/folder.service';
 import { NotificationService } from 'src/app/services/notification.service';
 
+interface PageEvent {
+  first: number;
+  rows: number;
+  page: number;
+  pageCount: number;
+}
 @Component({
   selector: 'app-folder-list',
   templateUrl: './folder-list.component.html',
   styleUrls: ['./folder-list.component.scss']
 })
 export class FolderListComponent {
-
-  productDialog: boolean = false;
   folders: Folder[] = [];
+  folders$: Observable<Page> | null = null;
+  first = 0;
+  rows = 10;
+  parentId!: number;
   folder!: Folder;
   selected!: Folder[] | null;
-  submitted: boolean = false;
-
-  newFolderName: string = '';
+  breadcrumbItems: MenuItem[] = [];
 
   constructor(
     private folderService: FolderService,
     private documentService: DocumentService,
     private notificationService: NotificationService,
     private router: Router
-  ) { }
+  ) {}
 
   ngOnInit() {
-    this.loadFolders();
+    this.refresh();
+  }
+
+  refresh(pageEvent: PageEvent = {
+    pageCount: 0, first: 0, rows: 10,
+    page: 0
+  }) {
+    this.folders$ = this.folderService.listParentfolder(pageEvent.first, pageEvent.rows)
+      .pipe(
+        tap(() => {
+
+          this.first = pageEvent.first;
+          this.rows = pageEvent.rows;
+        }),
+        catchError(() => {
+          this.notificationService.error('Error loading folders');
+          return of({ folders: [], totalElements: 0 } as Page );
+        })
+      );
+  }
+
+  onClickCreateFolder(): void {
+    const newFolderData = {
+      id: 0,
+      name: 'Nova Pasta',
+      creationDate: new Date(),
+      code: '',
+      favorite: false,
+      folderLike: false,
+      approver: '',
+      responsible: '',
+      reviews: [],
+      subFolders: [],
+      parentId: this.parentId,
+      documents: [],
+      documentCount: '',
+      parentFolderName: ''
+    };
+    this.folderService.create(newFolderData).subscribe(
+      (createdFolder) => {
+          this.folder = createdFolder;
+          this.refresh();
+      },
+      (error) => {
+        console.error('Erro ao criar pasta:', error);
+      }
+    );
+  }
+
+  updateFolderDocumentCount() {
+    for (const folder of this.folders) {
+      this.documentService.getDocumentCountByFolder(folder.id).subscribe((count) => {
+        folder.documentCount = count;
+      });
+    }
   }
 
   loadById(folder: Folder): void {
@@ -45,45 +108,26 @@ export class FolderListComponent {
     }
   }
 
-  onClickCreateFolder(): void {
-    const newFolderData = {
-      id: 0,
-      name: 'Nova Pasta',
-      creationDate: new Date(),
-      code: '',
-      favorite: false,
-      folderLike: false,
-      approver: '',
-      responsible: '',
-      review: [],
-      subFolders: [],
-    };
-
-    this.folderService.create(newFolderData).subscribe(
-      (createdFolder) => {
-
-          this.folder = createdFolder;
-          this.loadFolders();
-
-      },
-      (error) => {
-        console.error('Erro ao criar pasta:', error);
-      }
-    );
+  enableEditing(subfolder: any): void {
+    subfolder.editing = true;
+    subfolder.newName = subfolder.name;
   }
 
-  loadFolders(page: number = 0, size: number = 10) {
-    this.folderService.listParentfolder(page, size).subscribe((data) => {
-      this.folders = data.content.flat();
-      this.updateFolderDocumentCount();
-    });
+  disableEditing(subfolder: any): void {
+    if (subfolder.editing && subfolder.name !== subfolder.newName) {
+
+      this.folderService.update(subfolder.id, { name: subfolder.newName })
+        .subscribe(() => {
+          this.refresh();
+        });
+    }
+
+    subfolder.editing = false;
   }
 
-  updateFolderDocumentCount() {
-    for (const folder of this.folders) {
-      this.documentService.getDocumentCountByFolder(folder.id).subscribe((count) => {
-        folder.documentCount = count;
-      });
+  cellClick(subfolder: any): void {
+    if (!subfolder.editing) {
+      this.loadById(subfolder);
     }
   }
 
@@ -91,7 +135,7 @@ export class FolderListComponent {
     this.folderService.delete(folder.id).subscribe(
       () => {
         this.notificationService.success('Pasta excluída com sucesso');
-        this.loadFolders();
+        this.refresh();
       },
       (error) => {
         this.notificationService.error('Erro ao excluir a pasta');

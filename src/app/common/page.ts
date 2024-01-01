@@ -1,11 +1,7 @@
-export interface Page<T> {
-  content: T[];
-  totalPages: number;
-  totalElements: number;
-  last: boolean;
-  first: boolean;
-  numberOfElements: number;
-  size: number;
-  number: number;
-  empty: boolean;
+import { Folder } from "./folder";
+
+export interface Page {
+folders: Folder[];
+totalElements: number;
+totalPages?: number;
 }

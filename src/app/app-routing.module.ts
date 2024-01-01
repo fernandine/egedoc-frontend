@@ -16,7 +16,6 @@ const routes: Routes = [
 
   //########## PLATAFORMA ################
 
-  //{ path: 'dashboard', component: DashboardComponent},
     { path: 'folders', component: FolderListComponent },
     { path: 'folders/:id', component: FolderNavigationComponent },
     { path: 'properties', component: DocumentPropertiesComponent },

@@ -15,12 +15,12 @@ export class DocumentService {
 
   private http = inject(HttpClient);
 
-  list(page: number = 0, size: number = 10): Observable<Page<Document[]>> {
+  list(page: number = 0, size: number = 10) {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
 
-    return this.http.get<Page<Document[]>>(this.apiUrl, { params });
+    return this.http.get<Page>(this.apiUrl, { params });
   }
 
   // list(folderId: string | null, page: number = 0, size: number = 10): Observable<Page<Document[]>> {

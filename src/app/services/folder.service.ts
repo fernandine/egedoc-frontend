@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable, first, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Folder } from '../common/folder';
 import { Page } from '../common/page';
@@ -9,34 +9,41 @@ import { Page } from '../common/page';
   providedIn: 'root'
 })
 export class FolderService {
-  private selectedFolderSubject: BehaviorSubject<Folder | null> = new BehaviorSubject<Folder | null>(null);
-  selectedFolder$: Observable<Folder | null> = this.selectedFolderSubject.asObservable();
 
-  updateSelectedFolder(folder: Folder | null): void {
-    this.selectedFolderSubject.next(folder);
-  }
   private apiUrl = environment.apiUrl + '/folders';
+  public cache: Folder[] = [];
 
   private http = inject(HttpClient);
 
-  list(page: number = 0, size: number = 10): Observable<Page<Folder[]>> {
+  list(page: number = 0, size: number = 10): Observable<Folder> {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
 
-    return this.http.get<Page<Folder[]>>(this.apiUrl, { params });
+    return this.http.get<Folder>(this.apiUrl, { params });
   }
 
-  listSubfolders(id: number, page: number = 0, size: number = 10): Observable<Page<Folder[]>> {
-    const url = `${this.apiUrl}/${id}/subfolders?page=${page}&size=${size}`;
-    return this.http.get<Page<Folder[]>>(url);
-}
+  listSubfolders(parentId: number, page: number, size: number) {
+    const url = `${this.apiUrl}/${parentId}/subfolders`;
+   return this.http.get<Page>(url, { params: { page, size } }).pipe(
+      first(),
+      tap(data => (this.cache = data.folders))
+    );
+  }
 
-listParentfolder(page: number = 0, size: number = 10): Observable<Page<Folder[]>> {
-  const url = `${this.apiUrl}/parentFolders?page=${page}&size=${size}`;
-  return this.http.get<Page<Folder[]>>(url);
-}
+  getBreadcrumb(parentId: number): Observable<Folder> {
+    const url = `${this.apiUrl}/hierarchy/${parentId}`;
+    return this.http.get<Folder>(url);
+  }
 
+
+  listParentfolder(page: number, size: number) {
+    const url = `${this.apiUrl}/parentFolders`;
+    return this.http.get<Page>(url, { params: { page, size } }).pipe(
+      first(),
+      tap(data => (this.cache = data.folders))
+    );
+  }
 
   loadById(id: number): Observable<Folder> {
     const url = `${this.apiUrl}/${id}`;
@@ -47,7 +54,7 @@ listParentfolder(page: number = 0, size: number = 10): Observable<Page<Folder[]>
     return this.http.post<Folder>(this.apiUrl, folder);
   }
 
-  update(id:string, value: any): Observable<Folder> {
+  update(id: string, value: any): Observable<Folder> {
     return this.http.put<Folder>(`${this.apiUrl}/${id}`, value);
   }
 

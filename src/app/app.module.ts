@@ -10,6 +10,7 @@ import { AuthModule } from './authentication/auth.module';
 import { AdminModule } from './admin/admin.module';
 import { ComponentModule } from './components/component.module';
 import { PlatformModule } from './platform/platform.module';
+import { MaterialModule } from './material.module';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { PlatformModule } from './platform/platform.module';
     AuthModule,
     AdminModule,
     ComponentModule,
-    PlatformModule
+    PlatformModule,
+    MaterialModule
   ],
   providers: [ConfirmationService, MessageService],
   bootstrap: [AppComponent],

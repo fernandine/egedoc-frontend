@@ -10,6 +10,9 @@ import { DocumentPropertiesComponent } from './document-properties/document-prop
 import { DocumentFormComponent } from './document-form/document-form.component';
 import { FolderNavigationComponent } from './folder-navigation/folder-navigation.component';
 import { HeaderPlatformComponent } from './header-platform/header-platform.component';
+import { BreadcrumbComponent } from './breadcrumb/breadcrumb.component';
+import { MaterialModule } from '../material.module';
+import { FlexLayoutModule } from "@angular/flex-layout";
 
 @NgModule({
   declarations: [
@@ -19,6 +22,7 @@ import { HeaderPlatformComponent } from './header-platform/header-platform.compo
     DocumentFormComponent,
     FolderNavigationComponent,
     HeaderPlatformComponent,
+    BreadcrumbComponent,
 
   ],
   imports: [
@@ -27,6 +31,9 @@ import { HeaderPlatformComponent } from './header-platform/header-platform.compo
     ReactiveFormsModule,
     FormsModule,
     PrimengModule,
+    MaterialModule,
+    FlexLayoutModule
+
   ],
   providers: [ConfirmationService, MessageService]
 })

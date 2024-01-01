@@ -10,9 +10,12 @@ export interface Folder {
   folderLike: boolean;
   approver: string;
   responsible: string;
-  review: Review[];
-  //documents: Document;
-  documentCount?: string;
+  reviews: Review[];
+  documents: Document[];
   subFolders: Folder[];
-  parentId?: number;
+  documentCount: string;
+  parentId: number;
+  parentFolderName: string;
+  editing?: boolean;
+
 }
