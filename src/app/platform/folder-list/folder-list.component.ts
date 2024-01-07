@@ -1,5 +1,6 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, Input} from '@angular/core';
+import { NgIfContext } from '@angular/common';
+import { Component, Input, TemplateRef } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { MenuItem } from 'primeng/api';
@@ -30,13 +31,17 @@ export class FolderListComponent {
   folder!: Folder;
   selected!: Folder[] | null;
   breadcrumbItems: MenuItem[] = [];
+  documents: Document[] = [];
+  folderId!: number;
+  isFolderEmpty: boolean = true;
+  folderTable!: TemplateRef<NgIfContext<boolean>> | null;
 
   constructor(
     private folderService: FolderService,
     private documentService: DocumentService,
     private notificationService: NotificationService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.refresh();
@@ -48,16 +53,28 @@ export class FolderListComponent {
   }) {
     this.folders$ = this.folderService.listParentfolder(pageEvent.first, pageEvent.rows)
       .pipe(
-        tap(() => {
+        tap((page) => {
 
           this.first = pageEvent.first;
           this.rows = pageEvent.rows;
+          this.isFolderEmpty = page.totalElements === 0;
+
         }),
         catchError(() => {
           this.notificationService.error('Error loading folders');
-          return of({ folders: [], totalElements: 0 } as Page );
+          return of({ folders: [], totalElements: 0 } as Page);
         })
       );
+  }
+
+  loadById(folder: Folder): void {
+    if (folder.id !== undefined) {
+      this.folderService.loadById(folder.id).subscribe(() => {
+        this.router.navigate(['folders', folder.id]);
+      });
+    } else {
+      console.error('Folder id is undefined.');
+    }
   }
 
   onClickCreateFolder(): void {
@@ -79,8 +96,8 @@ export class FolderListComponent {
     };
     this.folderService.create(newFolderData).subscribe(
       (createdFolder) => {
-          this.folder = createdFolder;
-          this.refresh();
+        this.folder = createdFolder;
+        this.refresh();
       },
       (error) => {
         console.error('Erro ao criar pasta:', error);
@@ -96,17 +113,7 @@ export class FolderListComponent {
     }
   }
 
-  loadById(folder: Folder): void {
-    if (folder.id !== undefined) {
-      this.folderService.loadById(folder.id).subscribe((loadedFolder) => {
-        console.log('Detalhes da pasta carregados:', loadedFolder);
 
-        this.router.navigate(['folders', folder.id]);
-      });
-    } else {
-      console.error('Folder id is undefined.');
-    }
-  }
 
   enableEditing(subfolder: any): void {
     subfolder.editing = true;

@@ -22,14 +22,13 @@ export interface Document {
   confidential: Confidential
   responsible: string;
   notify: boolean;
-  allowDownload: boolean;
   reference: string;
-  fileUri: string;
+  fileUris: string[];
   documentType: DocumentType;
   approvalStatus: ApprovalStatus;
   accessPermission: AccessPermission;
   folderId: number;
   tags: Tag[];
   versions: Version[];
-
+  editing?: boolean;
 }

@@ -1,11 +1,9 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { DashboardComponent } from './platform/dashboard/dashboard.component';
 import { DocumentPropertiesComponent } from './platform/document-properties/document-properties.component';
 import { FolderNavigationComponent } from './platform/folder-navigation/folder-navigation.component';
 import { FolderListComponent } from './platform/folder-list/folder-list.component';
-import { HeaderComponent } from './components/header/header.component';
-import { HeaderPlatformComponent } from './platform/header-platform/header-platform.component';
+import { DocumentListComponent } from './platform/document-list/document-list.component';
 
 const routes: Routes = [
 
@@ -18,6 +16,8 @@ const routes: Routes = [
 
     { path: 'folders', component: FolderListComponent },
     { path: 'folders/:id', component: FolderNavigationComponent },
+    { path: 'documents', component: DocumentListComponent },
+    { path: 'documents/:id', component: DocumentListComponent },
     { path: 'properties', component: DocumentPropertiesComponent },
 
 ];

@@ -14,15 +14,15 @@ export class DepartmentService {
 
   private http = inject(HttpClient);
 
-  list(folderId: string | null, page: number = 0, size: number = 10): Observable<Page<Department[]>> {
-    let params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
-    if (folderId) {
-      params = params.set('folderId', folderId);
-    }
-    return this.http.get<Page<Department[]>>(this.apiUrl, { params });
-  }
+  // list(folderId: string | null, page: number = 0, size: number = 10): Observable<Page<Department[]>> {
+  //   let params = new HttpParams()
+  //     .set('page', page.toString())
+  //     .set('size', size.toString());
+  //   if (folderId) {
+  //     params = params.set('folderId', folderId);
+  //   }
+  //   return this.http.get<Page<Department[]>>(this.apiUrl, { params });
+  // }
 
   loadById(id: string): Observable<Department[]> {
     const url = `${this.apiUrl}/${id}`;

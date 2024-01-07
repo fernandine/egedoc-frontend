@@ -1,0 +1,98 @@
+<div *ngIf="documents$ | async as documentPage">
+
+  <p-table [value]="documentPage.documents"
+  [paginator]="true"
+  [first]="first"
+  [rows]="rows"
+  [showFirstLastIcon]="false"
+  [tableStyle]="{'min-width': '50rem'}"
+  [rowsPerPageOptions]="[5, 10, 20]"
+  [(selection)]="selected">
+    <ng-template pTemplate="caption">
+      <div class="flex align-items-center justify-content-between">
+        <h5 class="m-0">Documentos</h5>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 4rem">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th></th>
+        <th pSortableColumn="name" style="min-width:15rem">Nome <p-sortIcon field="name"></p-sortIcon></th>
+        <th pSortableColumn="price">Data de criação <p-sortIcon field="price"></p-sortIcon></th>
+        <th pSortableColumn="category" style="min-width:10rem">Código <p-sortIcon field="category"></p-sortIcon></th>
+        <th>
+          <p>Documentos Integrados</p>
+        </th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-documents>
+      <tr>
+        <td>
+          <p-tableCheckbox [value]="documents"></p-tableCheckbox>
+        </td>
+        <td (click)="loadById(documents)"><i class="pi pi-file text-2xl"></i></td>
+
+        <td [class.editing]="documents.editing" (click)="cellClick(documents)" class="cursor-pointer text-blue-500">
+          <ng-container *ngIf="!documents.editing; else editingMode">
+            {{ documents.title }}
+          </ng-container>
+          <ng-template #editingMode>
+            <input [(ngModel)]="documents.newName" (blur)="disableEditing(documents)" (keyup.enter)="disableEditing(documents)">
+          </ng-template>
+        </td>
+
+        <td>{{ documents.creationDate | date:"dd/MM/yyyy" }}</td>
+        <td>{{ documents.code }}</td>
+        <td>{{ documents.documentCount || 0 }}</td>
+        <td><i class="pi pi-thumbs-up"></i></td>
+        <td><i class="pi pi-star"></i></td>
+        <td><i class="pi pi-comment"></i></td>
+        <td><i class="pi pi-share-alt"></i></td>
+
+        <td>
+          <a pRipple
+            class="flex px-6 p-3 lg:px-3 lg:py-2 align-items-center text-600 hover:text-900 hover:surface-100 font-medium border-round cursor-pointer transition-colors transition-duration-150"
+            pStyleClass="@next" enterClass="hidden" enterActiveClass="scalein" leaveToClass="hidden"
+            leaveActiveClass="fadeout" [hideOnOutsideClick]="true">
+            <i class="pi pi-ellipsis-v"></i>
+          </a>
+          <ul appendTo="body"
+            class="list-none py-0 px-6 m-0 lg:px-0 border-round shadow-0 lg:shadow-2 lg:border-1 border-50 lg:absolute surface-overlay hidden -translate-x-100 origin-top w-full lg:w-12rem cursor-pointer">
+            <li>
+              <a pRipple
+              (click)="enableEditing(documents)" class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
+                <span class="font-medium">Renomear</span>
+              </a>
+            </li>
+            <li>
+              <a pRipple
+                class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
+                <span class="font-medium">Atualizar</span>
+              </a>
+            </li>
+            <li>
+              <a pRipple
+                class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
+                <span (click)="propertiesDocument(documents)" class="font-medium">Propriedades</span>
+              </a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+    </ng-template>
+    <div class="card flex justify-content-center">
+    </div>
+    <ng-template pTemplate="summary">
+      <div class="flex align-items-center justify-content-between">Total de documentos: {{ documents ? documents.length : 0 }}
+      </div>
+    </ng-template>
+  </p-table>
+</div>

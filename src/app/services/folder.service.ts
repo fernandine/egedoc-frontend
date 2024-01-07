@@ -15,12 +15,12 @@ export class FolderService {
 
   private http = inject(HttpClient);
 
-  list(page: number = 0, size: number = 10): Observable<Folder> {
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
-
-    return this.http.get<Folder>(this.apiUrl, { params });
+  list(page: number, size: number) {
+    const url = `${this.apiUrl}`;
+   return this.http.get<Page>(url, { params: { page, size } }).pipe(
+      first(),
+      tap(data => (this.cache = data.folders))
+    );
   }
 
   listSubfolders(parentId: number, page: number, size: number) {

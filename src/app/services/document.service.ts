@@ -1,10 +1,10 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, first, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Page } from '../common/page';
 import { Document } from '../common/document';
 import { User } from '../common/user';
+import { DocumentPage } from '../common/document-page';
 
 @Injectable({
   providedIn: 'root'
@@ -12,35 +12,24 @@ import { User } from '../common/user';
 export class DocumentService {
 
   private apiUrl = environment.apiUrl + '/documents';
+  public cache: Document[] = [];
 
   private http = inject(HttpClient);
 
-  list(page: number = 0, size: number = 10) {
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', size.toString());
-
-    return this.http.get<Page>(this.apiUrl, { params });
+  list(page: number, size: number) {
+    const url = `${this.apiUrl}`;
+   return this.http.get<DocumentPage>(url, { params: { page, size } }).pipe(
+      first(),
+      tap(data => (this.cache = data.documents))
+    );
   }
-
-  // list(folderId: string | null, page: number = 0, size: number = 10): Observable<Page<Document[]>> {
-  //   let params = new HttpParams()
-  //     .set('page', page.toString())
-  //     .set('size', size.toString());
-
-  //   if (folderId) {
-  //     params = params.set('folderId', folderId);
-  //   }
-
-  //   return this.http.get<Page<Document[]>>(this.apiUrl, { params });
-  // }
 
   getAccessedUsers(documentId: number): Observable<User[]> {
     const url = `${this.apiUrl}/${documentId}/accessed-users`;
     return this.http.get<User[]>(url);
   }
 
-  loadById(id: string): Observable<Document> {
+  loadById(id: number): Observable<Document> {
     const url = `${this.apiUrl}/${id}`;
     return this.http.get<Document>(url);
   }
@@ -55,12 +44,13 @@ export class DocumentService {
   }
 
   uploadFile(file: File, folderId: number): Observable<Document> {
-    const formData: FormData = new FormData();
+    const formData = new FormData();
     formData.append('file', file);
+    formData.append('folderId', folderId.toString());
     return this.http.post<Document>(`${this.apiUrl}/${folderId}/upload`, formData);
   }
 
-  update(id:number, value: Document): Observable<Document> {
+  update(id:number, value: any): Observable<Document> {
     return this.http.put<Document>(`${this.apiUrl}/${id}`, value);
   }
 

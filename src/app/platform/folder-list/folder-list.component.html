@@ -52,7 +52,6 @@
     </ng-template>
   </p-toolbar>
 
-
   <p-table [value]="page.folders"
   [paginator]="true"
   [first]="first"
@@ -60,9 +59,8 @@
   [showFirstLastIcon]="false"
   [tableStyle]="{'min-width': '50rem'}"
   [rowsPerPageOptions]="[5, 10, 20]"
-  [(selection)]="selected"
+  [(selection)]="selected">
 
-   >
     <ng-template pTemplate="caption">
       <div class="flex align-items-center justify-content-between">
         <h5 class="m-0">Pasta principal</h5>
@@ -87,12 +85,14 @@
         <th></th>
       </tr>
     </ng-template>
+
     <ng-template pTemplate="body" let-folder>
+
       <tr>
         <td>
           <p-tableCheckbox [value]="folder"></p-tableCheckbox>
         </td>
-        <td (click)="loadById(folder)"><i class="pi pi-folder text-2xl"></i></td>
+        <td (click)="loadById(folder)"><i class="pi pi-folder text-2xl text-yellow-600"></i></td>
 
         <td [class.editing]="folder.editing" (click)="cellClick(folder)" class="cursor-pointer text-blue-500">
           <ng-container *ngIf="!folder.editing; else editingMode">
@@ -110,7 +110,6 @@
         <td><i class="pi pi-star"></i></td>
         <td><i class="pi pi-comment"></i></td>
         <td><i class="pi pi-share-alt"></i></td>
-
         <td>
           <a pRipple
             class="flex px-6 p-3 lg:px-3 lg:py-2 align-items-center text-600 hover:text-900 hover:surface-100 font-medium border-round cursor-pointer transition-colors transition-duration-150"
@@ -142,17 +141,24 @@
         </td>
       </tr>
     </ng-template>
+
     <ng-template pTemplate="summary">
       <div class="flex align-items-center justify-content-between">Total de pastas: {{ folders ? folders.length : 0 }}
       </div>
     </ng-template>
-
   </p-table>
+
   </div>
 </div>
+
 
 <!-- <p-dialog header="Nova Pasta" [(visible)]="visibleFolder" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false">
   <ul *ngFor="let folder of folders">
     <li>{{ user.name }}</li>
   </ul>
 </p-dialog> -->
+
+
+
+
+
