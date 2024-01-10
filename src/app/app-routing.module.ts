@@ -1,29 +1,42 @@
-import { RouterModule, Routes } from '@angular/router';
+import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { DocumentPropertiesComponent } from './platform/document-properties/document-properties.component';
-import { FolderNavigationComponent } from './platform/folder-navigation/folder-navigation.component';
-import { FolderListComponent } from './platform/folder-list/folder-list.component';
-import { DocumentListComponent } from './platform/document-list/document-list.component';
 
 const routes: Routes = [
 
-  {
-    path: 'home',
-    loadChildren: () => import('./components/component.module').then(m => m.ComponentModule)
-  },
+  // ########## AUTHENTICATION ###########
 
-  //########## PLATAFORMA ################
+  { path: 'auth-login', loadChildren: () => import('./authentication/portal/portal.module').then(m => m.PortalModule) },
+  { path: 'nova-senha', loadChildren: () => import('./authentication/new-password/new-password.module').then(m => m.NewPasswordModule) },
+  { path: 'recuperar-senha', loadChildren: () => import('./authentication/recover-password/recover-password.module').then(m => m.RecoverPasswordModule) },
+  { path: 'senha-sucesso', loadChildren: () => import('./authentication/recover-success/recover-success.module').then(m => m.RecoverSuccessModule) },
 
-    { path: 'folders', component: FolderListComponent },
-    { path: 'folders/:id', component: FolderNavigationComponent },
-    { path: 'documents', component: DocumentListComponent },
-    { path: 'documents/:id', component: DocumentListComponent },
-    { path: 'properties', component: DocumentPropertiesComponent },
+  // ########## WEBSITE ###########
 
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'home', loadChildren: () => import('./components/home/home.module').then(m => m.HomeModule) },
+  { path: 'quem-somos', loadChildren: () => import('./components/about-page/about-page.module').then(m => m.AboutPageModule) },
+  { path: 'blog', loadChildren: () => import('./components/about-page/about-page.module').then(m => m.AboutPageModule) },
+  { path: 'painel-admin', loadChildren: () => import('./admin/painel/painel.module').then(m => m.PainelModule) },
+  { path: 'solucoes', loadChildren: () => import('./components/solutions/solutions.module').then(m => m.SolutionsModule) },
+  { path: 'contato', loadChildren: () => import('./components/contact/contact.module').then(m => m.ContactModule) },
+  { path: 'trabalhe-conosco', loadChildren: () => import('./components/vacancies/vacancies.module').then(m => m.VacanciesModule) },
+  { path: 'trilha-egedoc', loadChildren: () => import('./components/trilha/trilha.module').then(m => m.TrilhaModule) },
+  { path: 'experimente-gratis', loadChildren: () => import('./components/try-free/try-free.module').then(m => m.TryFreeModule) },
+  { path: 'confirmacao', loadChildren: () => import('./components/confirmation-tester/confirmation-tester.module').then(m => m.ConfirmationTesterModule) },
+  { path: 'portal-admin', loadChildren: () => import('./authentication/portal/portal.module').then(m => m.PortalModule) },
+  { path: 'planos-precos', loadChildren: () => import('./components/plans-prices/plans-prices.module').then(m => m.PlansPricesModule) },
+  { path: 'parceiros', loadChildren: () => import('./components/partners/partners.module').then(m => m.PartnersModule) },
+  { path: 'funcionalidades', loadChildren: () => import('./components/partners/partners.module').then(m => m.PartnersModule) },
+
+  // ########## PLATFORM ###########
+
+  { path: 'folders', loadChildren: () => import('./platform/folder/folder-list.module').then(m => m.FolderListModule) },
+  // { path: 'folder-navigation', loadChildren: () => import('./platform/folder/folder-navigation/folder-navigation.module').then(m => m.FolderNavigationModule) },
+  { path: '**', redirectTo: '' }
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],
   exports: [RouterModule]
 })
 export class AppRoutingModule { }

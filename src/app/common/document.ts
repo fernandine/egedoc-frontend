@@ -8,7 +8,7 @@ import { Version } from "./version";
 export interface Document {
 
   id: number;
-  title: string;
+  name: string;
   category: string;
   description: string;
   creationDate: Date;

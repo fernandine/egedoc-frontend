@@ -1,0 +1,164 @@
+
+
+<!-- <app-breadcrumb [items]="breadcrumbItems"></app-breadcrumb> -->
+
+<div *ngIf="folders$ | async as page">
+<div class="card p-2">
+  <p-toast></p-toast>
+  <p-toolbar styleClass="mb-4 gap-2">
+
+    <ng-template pTemplate="left">
+      <ul class="z-5 list-none p-0 m-0 flex lg:align-items-center select-none flex-column lg:flex-row">
+        <li>
+          <a pRipple
+            class="flex px-6 p-3 lg:px-3 lg:py-2 align-items-center text-indigo-100 font-medium border-round cursor-pointer"
+            pStyleClass="@next" enterClass="hidden" enterActiveClass="scalein" leaveToClass="hidden"
+            leaveActiveClass="fadeout" [hideOnOutsideClick]="true">
+            <p-button label="Novo" icon="pi pi-angle-down ml-auto lg:ml-3"
+              class="mr-2" iconPos="right"></p-button>
+          </a>
+          <ul
+            class="list-none py-3 px-6 m-0 lg:px-0 lg:py-0 border-round shadow-0 lg:border-1 border-50 lg:shadow-2 lg:absolute surface-overlay hidden origin-top w-full lg:w-15rem cursor-pointer">
+            <li>
+              <a pRipple
+                class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
+                <span (click)="onClickCreateFolder()" class="font-medium">Criar Pasta</span>
+              </a>
+            </li>
+            <li>
+              <a pRipple
+                class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
+                <span class="font-medium">Adicionar Arquivo</span>
+              </a>
+            </li>
+            <li>
+              <a pRipple
+                class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
+                <span class="font-medium">Formulário</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+      <button pButton pRipple label="Apagar" icon="pi pi-trash mr-2" class="p-button-danger"
+        (click)="deleteSelectedFolders()" [disabled]="!selected || !selected.length"></button>
+    </ng-template>
+
+    <ng-template pTemplate="right">
+      <p-fileUpload mode="basic" accept="image/*" chooseIcon="none" [maxFileSize]="1000000" chooseLabel="Importar"
+        class="mr-2 inline-block"></p-fileUpload>
+      <button pButton pRipple label="Exportar" icon="pi pi-upload mr-2" class="ml-3 p-button-help"></button>
+    </ng-template>
+  </p-toolbar>
+
+  <p-table [value]="page.folders"
+  [paginator]="true"
+  [first]="first"
+  [rows]="rows"
+  [showFirstLastIcon]="false"
+  [tableStyle]="{'min-width': '50rem'}"
+  [rowsPerPageOptions]="[5, 10, 20]"
+  [(selection)]="selected">
+
+    <ng-template pTemplate="caption">
+      <div class="flex align-items-center justify-content-between">
+        <h5 class="m-0">Pasta principal</h5>
+      </div>
+    </ng-template>
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 4rem">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th></th>
+        <th pSortableColumn="name" style="min-width:15rem">Nome <p-sortIcon field="name"></p-sortIcon></th>
+        <th pSortableColumn="price">Data de criação <p-sortIcon field="price"></p-sortIcon></th>
+        <th pSortableColumn="category" style="min-width:10rem">Código <p-sortIcon field="category"></p-sortIcon></th>
+        <th>
+          <p>Documentos Integrados</p>
+        </th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-folder>
+
+      <tr>
+        <td>
+          <p-tableCheckbox [value]="folder"></p-tableCheckbox>
+        </td>
+        <td (click)="loadById(folder)"><i class="pi pi-folder text-2xl text-yellow-600"></i></td>
+
+        <td [class.editing]="folder.editing" (click)="cellClick(folder)" class="cursor-pointer text-blue-500">
+          <ng-container *ngIf="!folder.editing; else editingMode">
+            {{ folder.name }}
+          </ng-container>
+          <ng-template #editingMode>
+            <input [(ngModel)]="folder.newName" (blur)="disableEditing(folder)" (keyup.enter)="disableEditing(folder)">
+          </ng-template>
+        </td>
+
+        <td>{{ folder.creationDate | date:"dd/MM/yyyy" }}</td>
+        <td>{{ folder.code }}</td>
+        <td>{{ folder.documentCount || 0 }}</td>
+        <td><i class="pi pi-thumbs-up"></i></td>
+        <td><i class="pi pi-star"></i></td>
+        <td><i class="pi pi-comment"></i></td>
+        <td><i class="pi pi-share-alt"></i></td>
+        <td>
+          <a pRipple
+            class="flex px-6 p-3 lg:px-3 lg:py-2 align-items-center text-600 hover:text-900 hover:surface-100 font-medium border-round cursor-pointer transition-colors transition-duration-150"
+            pStyleClass="@next" enterClass="hidden" enterActiveClass="scalein" leaveToClass="hidden"
+            leaveActiveClass="fadeout" [hideOnOutsideClick]="true">
+            <i class="pi pi-ellipsis-v"></i>
+          </a>
+          <ul appendTo="body"
+            class="list-none py-0 px-6 m-0 lg:px-0 border-round shadow-0 lg:shadow-2 lg:border-1 border-50 lg:absolute surface-overlay hidden -translate-x-100 origin-top w-full lg:w-12rem cursor-pointer">
+            <li>
+              <a pRipple
+              (click)="enableEditing(folder)" class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
+                <span class="font-medium">Renomear</span>
+              </a>
+            </li>
+            <li>
+              <a pRipple
+                class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
+                <span class="font-medium">Atualizar</span>
+              </a>
+            </li>
+            <li>
+              <a pRipple
+                class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
+                <span class="font-medium">Propriedades</span>
+              </a>
+            </li>
+          </ul>
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="summary">
+      <div class="flex align-items-center justify-content-between">Total de pastas: {{ folders ? folders.length : 0 }}
+      </div>
+    </ng-template>
+  </p-table>
+
+  </div>
+</div>
+
+
+<!-- <p-dialog header="Nova Pasta" [(visible)]="visibleFolder" [modal]="true" [style]="{width: '50vw'}" [draggable]="false" [resizable]="false">
+  <ul *ngFor="let folder of folders">
+    <li>{{ user.name }}</li>
+  </ul>
+</p-dialog> -->
+
+
+
+
+

@@ -24,6 +24,14 @@ export class DocumentService {
     );
   }
 
+  listDocumentByFolderId(folderId: number, page: number, size: number) {
+    const url = `${this.apiUrl}/folder/${folderId}`;
+   return this.http.get<DocumentPage>(url, { params: { page, size } }).pipe(
+      first(),
+      tap(data => (this.cache = data.documents))
+    );
+  }
+
   getAccessedUsers(documentId: number): Observable<User[]> {
     const url = `${this.apiUrl}/${documentId}/accessed-users`;
     return this.http.get<User[]>(url);
@@ -54,7 +62,7 @@ export class DocumentService {
     return this.http.put<Document>(`${this.apiUrl}/${id}`, value);
   }
 
-  delete(id: number): Observable<void> {
+  deleteDocument(id: number): Observable<void> {
     const url = `${this.apiUrl}/${id}`;
     return this.http.delete<void>(url);
   }

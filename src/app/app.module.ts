@@ -6,27 +6,27 @@ import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ConfirmationService, MessageService } from 'primeng/api';
-import { AuthModule } from './authentication/auth.module';
-import { AdminModule } from './admin/admin.module';
-import { ComponentModule } from './components/component.module';
-import { PlatformModule } from './platform/platform.module';
+import { PrimengModule } from './primeng.module';
+import { HeaderComponent } from './shared/layout/header-site/header.component';
+import { HeaderPlatformComponent } from './shared/layout/header-platform/header-platform.component';
+import { FooterComponent } from './shared/layout/footer/footer.component';
+import { HeaderService } from './services/header.service';
 
 @NgModule({
   declarations: [
     AppComponent,
+    HeaderComponent,
+    HeaderPlatformComponent,
+    FooterComponent
   ],
-
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
-    AuthModule,
-    AdminModule,
-    ComponentModule,
-    PlatformModule,
+    PrimengModule,
   ],
-  providers: [ConfirmationService, MessageService],
+  providers: [ConfirmationService, MessageService, HeaderService],
   bootstrap: [AppComponent],
 })
 export class AppModule { }

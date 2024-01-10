@@ -1,2 +1,11 @@
-<router-outlet></router-outlet>
+<div *ngIf="isHeaderForSite">
+  <app-header></app-header>
+  <router-outlet></router-outlet>
+  <app-footer></app-footer>
+</div>
+
+<div *ngIf="!isHeaderForSite">
+  <app-header-platform></app-header-platform>
+  <router-outlet></router-outlet>
+</div>
 

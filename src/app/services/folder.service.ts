@@ -23,13 +23,13 @@ export class FolderService {
     );
   }
 
-  listSubfolders(parentId: number, page: number, size: number) {
-    const url = `${this.apiUrl}/${parentId}/subfolders`;
-   return this.http.get<Page>(url, { params: { page, size } }).pipe(
-      first(),
-      tap(data => (this.cache = data.folders))
-    );
-  }
+  // listsubFolders(parentId: number, page: number, size: number) {
+  //   const url = `${this.apiUrl}/${parentId}/subFolders`;
+  //  return this.http.get<Page>(url, { params: { page, size } }).pipe(
+  //     first(),
+  //     tap(data => (this.cache = data.folders))
+  //   );
+  // }
 
   getBreadcrumb(parentId: number): Observable<Folder> {
     const url = `${this.apiUrl}/hierarchy/${parentId}`;
@@ -58,7 +58,7 @@ export class FolderService {
     return this.http.put<Folder>(`${this.apiUrl}/${id}`, value);
   }
 
-  delete(id: number): Observable<void> {
+  deleteFolder(id: number): Observable<void> {
     const url = `${this.apiUrl}/${id}`;
     return this.http.delete<void>(url);
   }
