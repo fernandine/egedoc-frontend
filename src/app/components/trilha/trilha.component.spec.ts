@@ -8,8 +8,8 @@ describe('TrilhaComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TrilhaComponent]
-    });
+    imports: [TrilhaComponent]
+});
     fixture = TestBed.createComponent(TrilhaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

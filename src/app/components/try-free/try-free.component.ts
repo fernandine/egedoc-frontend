@@ -1,17 +1,28 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Route, Router } from '@angular/router';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { catchError, throwError } from 'rxjs';
 import { Segment } from 'src/app/common/segment';
 import { TesterService } from 'src/app/services/tester.service';
 import { UserService } from 'src/app/services/user.service';
+import { RippleModule } from 'primeng/ripple';
+import { ButtonModule } from 'primeng/button';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
+import { DropdownModule } from 'primeng/dropdown';
+import { InputMaskModule } from 'primeng/inputmask';
+import { CheckboxModule } from 'primeng/checkbox';
+import { InputTextModule } from 'primeng/inputtext';
+import { DividerModule } from 'primeng/divider';
 
 @Component({
-  selector: 'app-try-free',
-  templateUrl: './try-free.component.html',
-  styleUrls: ['./try-free.component.scss']
+    selector: 'app-try-free',
+    templateUrl: './try-free.component.html',
+    styleUrls: ['./try-free.component.scss'],
+    standalone: true,
+    imports: [FormsModule, ReactiveFormsModule, DividerModule, InputTextModule, CheckboxModule, InputMaskModule, DropdownModule, ToastModule, ConfirmDialogModule, ButtonModule, RippleModule]
 })
 export class TryFreeComponent {
   form!: FormGroup;

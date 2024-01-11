@@ -8,8 +8,8 @@ describe('PortalComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PortalComponent]
-    });
+    imports: [PortalComponent]
+});
     fixture = TestBed.createComponent(PortalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

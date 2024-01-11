@@ -2,14 +2,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DocumentPropertiesComponent } from './document-properties.component';
 import { DocumentPropertiesRoutingModule } from './document-properties-routing.module';
-import { PrimengModule } from 'src/app/primeng.module';
+import { DocumentFormComponent } from '../document-form/document-form.component';
 
 @NgModule({
-  declarations: [DocumentPropertiesComponent],
+  declarations: [DocumentPropertiesComponent, DocumentFormComponent],
   imports: [
     CommonModule,
     DocumentPropertiesRoutingModule,
-    PrimengModule
+
   ]
 })
 export class DocumentPropertiesModule { }

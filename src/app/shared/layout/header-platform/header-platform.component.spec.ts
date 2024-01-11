@@ -8,8 +8,8 @@ describe('HeaderPlatformComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [HeaderPlatformComponent]
-    });
+    imports: [HeaderPlatformComponent]
+});
     fixture = TestBed.createComponent(HeaderPlatformComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PainelRoutingModule } from './painel-routing.module';
-import { PrimengModule } from 'src/app/primeng.module';
+
 import { PainelComponent } from './painel.component';
 import { TesterListComponent } from '../tester-list/tester-list.component';
 import { SubscriberListComponent } from '../subscriber-list/subscriber-list.component';
@@ -9,15 +9,12 @@ import { SubscriberListComponent } from '../subscriber-list/subscriber-list.comp
 
 
 @NgModule({
-  declarations: [
+    imports: [
+    CommonModule,
+    PainelRoutingModule,
     PainelComponent,
     TesterListComponent,
     SubscriberListComponent
-  ],
-  imports: [
-    CommonModule,
-    PainelRoutingModule,
-    PrimengModule
-  ]
+]
 })
 export class PainelModule { }

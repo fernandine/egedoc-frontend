@@ -8,8 +8,8 @@ describe('PainelComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [PainelComponent]
-    });
+    imports: [PainelComponent]
+});
     fixture = TestBed.createComponent(PainelComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

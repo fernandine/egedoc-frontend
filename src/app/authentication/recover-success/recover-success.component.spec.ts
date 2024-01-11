@@ -8,8 +8,8 @@ describe('RecoverSuccessComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [RecoverSuccessComponent]
-    });
+    imports: [RecoverSuccessComponent]
+});
     fixture = TestBed.createComponent(RecoverSuccessComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

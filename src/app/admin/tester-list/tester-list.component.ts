@@ -1,11 +1,14 @@
 import { Component, Input } from '@angular/core';
 import { Tester } from 'src/app/common/tester';
 import { TesterService } from 'src/app/services/tester.service';
+import { NgFor, DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-tester-list',
-  templateUrl: './tester-list.component.html',
-  styleUrls: ['./tester-list.component.scss']
+    selector: 'app-tester-list',
+    templateUrl: './tester-list.component.html',
+    styleUrls: ['./tester-list.component.scss'],
+    standalone: true,
+    imports: [NgFor, DatePipe]
 })
 export class TesterListComponent {
 

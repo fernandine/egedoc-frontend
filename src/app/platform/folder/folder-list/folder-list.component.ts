@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, SharedModule } from 'primeng/api';
 import { Observable, catchError, map, of, tap } from 'rxjs';
 import { Folder } from 'src/app/common/folder';
 import { Page } from 'src/app/common/page';
@@ -8,6 +8,15 @@ import { DocumentService } from 'src/app/services/document.service';
 import { FolderService } from 'src/app/services/folder.service';
 import { HeaderService } from 'src/app/services/header.service';
 import { NotificationService } from 'src/app/services/notification.service';
+import { FormsModule } from '@angular/forms';
+import { TableModule } from 'primeng/table';
+import { FileUploadModule } from 'primeng/fileupload';
+import { ButtonModule } from 'primeng/button';
+import { StyleClassModule } from 'primeng/styleclass';
+import { RippleModule } from 'primeng/ripple';
+import { ToolbarModule } from 'primeng/toolbar';
+import { ToastModule } from 'primeng/toast';
+import { NgIf, AsyncPipe, DatePipe } from '@angular/common';
 
 interface PageEvent {
   first: number;
@@ -16,9 +25,11 @@ interface PageEvent {
   pageCount: number;
 }
 @Component({
-  selector: 'app-folder-list',
-  templateUrl: './folder-list.component.html',
-  styleUrls: ['./folder-list.component.scss']
+    selector: 'app-folder-list',
+    templateUrl: './folder-list.component.html',
+    styleUrls: ['./folder-list.component.scss'],
+    standalone: true,
+    imports: [NgIf, ToastModule, ToolbarModule, SharedModule, RippleModule, StyleClassModule, ButtonModule, FileUploadModule, TableModule, FormsModule, AsyncPipe, DatePipe]
 })
 export class FolderListComponent {
 

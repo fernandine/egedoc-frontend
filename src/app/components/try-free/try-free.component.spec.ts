@@ -8,8 +8,8 @@ describe('TryFreeComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [TryFreeComponent]
-    });
+    imports: [TryFreeComponent]
+});
     fixture = TestBed.createComponent(TryFreeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

@@ -23,12 +23,6 @@
               <li>
                 <a pRipple
                   class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
-                  <span (click)="onClickCreateFolder()" class="font-medium">Criar Documento</span>
-                </a>
-              </li>
-              <li>
-                <a pRipple
-                  class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
                   <span class="font-medium">Adicionar Arquivo</span>
                 </a>
               </li>
@@ -48,7 +42,7 @@
       </ng-template>
 
       <ng-template pTemplate="right">
-        <p-fileUpload mode="basic" accept="image/*" chooseIcon="none" [maxFileSize]="1000000" chooseLabel="Importar arquivo"
+        <p-fileUpload mode="basic" accept="image/*" chooseIcon="none" [maxFileSize]="1000000" chooseLabel="Importar"
           class="mr-2 inline-block"></p-fileUpload>
         <button pButton pRipple label="Exportar" icon="pi pi-upload mr-2" class="ml-3 p-button-help"></button>
       </ng-template>
@@ -140,6 +134,7 @@
             </ul>
           </td>
         </tr>
+        <input type="file" #fileInput style="display: none">
 
 
         <!------- LISTA DE DOCUMENTOS ------->
@@ -193,15 +188,17 @@
               </ul>
             </td>
           </tr>
-          <input type="file" #fileInput style="display: none">
         </ng-container>
       </ng-template>
 
       <div class="card flex justify-content-center">
       </div>
       <ng-template pTemplate="summary">
-        <div class="flex align-items-center justify-content-between">Total de subpastas: {{ subFolders ?
-          subFolders.length : 0 }}
+        <div class="ml-2 flex align-items-center mb-2 justify-content-between">{{ subFolders ?
+          subFolders.length : 0 }} subpastas
+        </div>
+        <div class="ml-2 flex align-items-center justify-content-between">{{ documents ?
+          documents.length : 0 }} arquivos
         </div>
       </ng-template>
     </p-table>

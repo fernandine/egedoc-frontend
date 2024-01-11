@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, SharedModule } from 'primeng/api';
 import { Observable, catchError, map, of, tap } from 'rxjs';
 import { Document } from 'src/app/common/document';
 import { DocumentPage } from 'src/app/common/document-page';
@@ -12,6 +12,14 @@ import { DocumentService } from 'src/app/services/document.service';
 import { FolderService } from 'src/app/services/folder.service';
 import { HeaderService } from 'src/app/services/header.service';
 import { NotificationService } from 'src/app/services/notification.service';
+import { FormsModule } from '@angular/forms';
+import { NgIf, NgFor, AsyncPipe, DatePipe } from '@angular/common';
+import { TableModule } from 'primeng/table';
+import { FileUploadModule } from 'primeng/fileupload';
+import { ButtonModule } from 'primeng/button';
+import { StyleClassModule } from 'primeng/styleclass';
+import { RippleModule } from 'primeng/ripple';
+import { ToolbarModule } from 'primeng/toolbar';
 
 interface PageEvent {
   first: number;
@@ -20,14 +28,17 @@ interface PageEvent {
   pageCount: number;
 }
 @Component({
-  selector: 'app-folder-navigation',
-  templateUrl: './folder-navigation.component.html',
-  styleUrls: ['./folder-navigation.component.scss']
+    selector: 'app-folder-navigation',
+    templateUrl: './folder-navigation.component.html',
+    styleUrls: ['./folder-navigation.component.scss'],
+    standalone: true,
+    imports: [ToolbarModule, SharedModule, RippleModule, StyleClassModule, ButtonModule, FileUploadModule, TableModule, NgIf, FormsModule, NgFor, AsyncPipe, DatePipe]
 })
 export class FolderNavigationComponent {
 
   subFolders$: Observable<Page> | null = null;
   documents$: Observable<DocumentPage> | null = null;
+  folderItems: (Folder | Document)[] = [];
 
   subFolders: Folder[] = [];
   first = 0;
@@ -48,7 +59,6 @@ export class FolderNavigationComponent {
   breadcrumbItems: MenuItem[] = [];
   isFolderEmpty: boolean = true;
   folderId!: number;
-  selectedItems: (Folder | Document)[] = [];
 
   constructor(
     private documentService: DocumentService,
@@ -79,6 +89,7 @@ export class FolderNavigationComponent {
       }
     );
   }
+
   getDocumentByFolderId(folderId: number, pageEvent: PageEvent = {
     pageCount: 0, first: 0, rows: 10,
     page: 0

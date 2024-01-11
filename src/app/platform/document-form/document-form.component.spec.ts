@@ -8,8 +8,8 @@ describe('DocumentFormComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [DocumentFormComponent]
-    });
+    declarations: [DocumentFormComponent]
+});
     fixture = TestBed.createComponent(DocumentFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

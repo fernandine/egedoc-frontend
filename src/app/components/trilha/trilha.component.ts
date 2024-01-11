@@ -1,4 +1,9 @@
 import { Component } from '@angular/core';
+import { ButtonModule } from 'primeng/button';
+import { CardModule } from 'primeng/card';
+import { NgClass, NgIf } from '@angular/common';
+import { SharedModule } from 'primeng/api';
+import { TimelineModule } from 'primeng/timeline';
 
 interface EventItem {
   status?: string;
@@ -9,9 +14,11 @@ interface EventItem {
 }
 
 @Component({
-  selector: 'app-trilha',
-  templateUrl: './trilha.component.html',
-  styleUrls: ['./trilha.component.scss']
+    selector: 'app-trilha',
+    templateUrl: './trilha.component.html',
+    styleUrls: ['./trilha.component.scss'],
+    standalone: true,
+    imports: [TimelineModule, SharedModule, NgClass, CardModule, NgIf, ButtonModule]
 })
 export class TrilhaComponent {
   events: EventItem[];

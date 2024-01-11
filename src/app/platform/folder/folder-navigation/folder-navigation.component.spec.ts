@@ -8,8 +8,8 @@ describe('FolderNavigationComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [FolderNavigationComponent]
-    });
+    imports: [FolderNavigationComponent]
+});
     fixture = TestBed.createComponent(FolderNavigationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

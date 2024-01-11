@@ -8,8 +8,8 @@ describe('DocumentPropertiesComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [DocumentPropertiesComponent]
-    });
+    declarations: [DocumentPropertiesComponent]
+});
     fixture = TestBed.createComponent(DocumentPropertiesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

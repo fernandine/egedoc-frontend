@@ -2,16 +2,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RecoverSuccessComponent } from './recover-success.component';
 import { RecoverSuccessRoutingModule } from './recover-success-routing.module';
-import { PrimengModule } from 'src/app/primeng.module';
+
 
 @NgModule({
-  declarations: [
-    RecoverSuccessComponent
-  ],
-  imports: [
+    imports: [
     CommonModule,
     RecoverSuccessRoutingModule,
-    PrimengModule
-  ]
+    RecoverSuccessComponent
+]
 })
 export class RecoverSuccessModule { }

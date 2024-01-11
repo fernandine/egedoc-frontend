@@ -1,11 +1,14 @@
 import { Component, Input } from '@angular/core';
 import { Subscriber } from 'src/app/common/subscriber';
 import { SubscriberService } from 'src/app/services/subscriber.service';
+import { NgFor, DatePipe } from '@angular/common';
 
 @Component({
-  selector: 'app-subscriber-list',
-  templateUrl: './subscriber-list.component.html',
-  styleUrls: ['./subscriber-list.component.scss']
+    selector: 'app-subscriber-list',
+    templateUrl: './subscriber-list.component.html',
+    styleUrls: ['./subscriber-list.component.scss'],
+    standalone: true,
+    imports: [NgFor, DatePipe]
 })
 export class SubscriberListComponent {
   @Input() subscribers: Subscriber[] = [];

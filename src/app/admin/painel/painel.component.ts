@@ -1,11 +1,19 @@
 import { Component } from '@angular/core';
 import { Subscriber } from 'src/app/common/subscriber';
 import { Tester } from 'src/app/common/tester';
+import { SubscriberListComponent } from '../subscriber-list/subscriber-list.component';
+import { TesterListComponent } from '../tester-list/tester-list.component';
+import { NgIf } from '@angular/common';
+import { BadgeModule } from 'primeng/badge';
+import { StyleClassModule } from 'primeng/styleclass';
+import { RippleModule } from 'primeng/ripple';
 
 @Component({
-  selector: 'app-painel',
-  templateUrl: './painel.component.html',
-  styleUrls: ['./painel.component.scss']
+    selector: 'app-painel',
+    templateUrl: './painel.component.html',
+    styleUrls: ['./painel.component.scss'],
+    standalone: true,
+    imports: [RippleModule, StyleClassModule, BadgeModule, NgIf, TesterListComponent, SubscriberListComponent]
 })
 export class PainelComponent {
   testers: Tester[] = [];

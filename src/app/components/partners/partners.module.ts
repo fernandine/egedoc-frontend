@@ -2,14 +2,13 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PartnersComponent } from './partners.component';
 import { PartnersRoutingModule } from './partners-routing.module';
-import { PrimengModule } from 'src/app/primeng.module';
+
 
 @NgModule({
-  declarations: [PartnersComponent],
-  imports: [
+    imports: [
     CommonModule,
     PartnersRoutingModule,
-    PrimengModule
-  ]
+    PartnersComponent
+]
 })
 export class PartnersModule { }
