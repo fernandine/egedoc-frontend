@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SelectItem } from 'primeng/api';
 import { Tag } from 'primeng/tag';
@@ -7,11 +7,17 @@ import { catchError, throwError } from 'rxjs';
 import { Confidential } from 'src/app/common/enums/confidential.enum';
 import { DocumentType } from 'src/app/common/enums/document-type';
 import { DocumentService } from 'src/app/services/document.service';
-
+import { InputSwitchModule } from 'primeng/inputswitch';
+import { DropdownModule } from 'primeng/dropdown';
+import { ChipsModule } from 'primeng/chips';
+import { CalendarModule } from 'primeng/calendar';
 @Component({
   selector: 'app-document-form',
   templateUrl: './document-form.component.html',
-  styleUrls: ['./document-form.component.scss']
+  styleUrls: ['./document-form.component.scss'],
+  standalone: true,
+  imports: [InputSwitchModule, CalendarModule, DropdownModule, ChipsModule, FormsModule, ReactiveFormsModule]
+
 })
 export class DocumentFormComponent {
 

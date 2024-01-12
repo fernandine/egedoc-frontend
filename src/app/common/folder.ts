@@ -1,4 +1,5 @@
 import { Review } from "./review";
+import { Document } from "./document";
 
 export interface Folder {
 

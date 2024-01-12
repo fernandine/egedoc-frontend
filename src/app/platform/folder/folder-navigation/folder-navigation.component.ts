@@ -36,28 +36,13 @@ interface PageEvent {
 })
 export class FolderNavigationComponent {
 
-  subFolders$: Observable<Page> | null = null;
-  documents$: Observable<DocumentPage> | null = null;
-  folderItems: (Folder | Document)[] = [];
-
   subFolders: Folder[] = [];
   first = 0;
   rows = 10;
 
   documents: Document[] = [];
-  visibleUser: boolean = false;
-  visibleUpdateDocument: boolean = false;
   folder!: Folder;
-  document!: Document;
   selectedFolder: Folder[] | null = null;
-  selectedDocument: Document[] | null = null;
-  submitted: boolean = false;
-  items!: MenuItem[];
-  versions: Version[] = [];
-  users: User[] = [];
-  parentId!: number;
-  breadcrumbItems: MenuItem[] = [];
-  isFolderEmpty: boolean = true;
   folderId!: number;
 
   constructor(
@@ -78,35 +63,20 @@ export class FolderNavigationComponent {
     });
   }
 
+  getItemsToDisplay() {
+    return this.folder ? [...this.folder.subFolders, ...(this.folder.documents || [])] : [];
+  }
+
   loadFolderDetails() {
     this.folderService.loadById(this.folderId).subscribe(
       (folder: Folder) => {
         this.folder = folder;
-        this.getDocumentByFolderId(folder.id);
-      },
+
+     },
       (error) => {
         console.error('Erro ao carregar detalhes da pasta:', error);
       }
     );
-  }
-
-  getDocumentByFolderId(folderId: number, pageEvent: PageEvent = {
-    pageCount: 0, first: 0, rows: 10,
-    page: 0
-  }) {
-    this.documents$ = this.documentService.listDocumentByFolderId(folderId, pageEvent.first, pageEvent.rows)
-      .pipe(
-        tap((page) => {
-          this.first = pageEvent.first;
-          this.rows = pageEvent.rows;
-          this.isFolderEmpty = page.totalElements === 0;
-
-        }),
-        catchError(() => {
-          this.notificationService.error('Error loading folders');
-          return of({ documents: [], totalElements: 0 } as DocumentPage);
-        })
-      );
   }
 
   navigateTosubFolder(subFolderId: number, folder: any): void {
@@ -138,6 +108,8 @@ export class FolderNavigationComponent {
         if (this.folder && this.folder.subFolders) {
           this.folder.subFolders.length = 0;
           this.folder.subFolders.push(createdFolder);
+          this.loadFolderDetails();
+
         }
       },
       (error) => {
@@ -187,7 +159,7 @@ export class FolderNavigationComponent {
       this.documentService.uploadFile(file, folderId).subscribe(
         (updatedDocument: Document) => {
           console.log('Upload bem-sucedido', updatedDocument);
-            this.getDocumentByFolderId(folderId);
+            //this.getDocumentByFolderId(folderId);
         },
         (error) => {
           console.error('Erro durante o upload', error);
@@ -216,187 +188,4 @@ export class FolderNavigationComponent {
       this.selectedFolder = [];
     }
   }
-
-
-
-
-
-
-
-
-  // loadById(folder: Folder): void {
-  //   if (folder.id !== undefined) {
-  //     this.loadFolderById(folder.id);
-  //     this.router.navigate(['folders', folder.id]);
-  //   } else {
-  //     console.error('Folder id is undefined.');
-  //   }
-  // }
-
-  // refresh(pageEvent: PageEvent = {
-  //   pageCount: 0, first: 0, rows: 10,
-  //   page: 0
-  // }) {
-  //   this.subFolders$ = this.folderService.list(pageEvent.first, pageEvent.rows)
-  //     .pipe(
-  //       tap((page) => {
-  //         this.first = pageEvent.first;
-  //         this.rows = pageEvent.rows;
-  //         this.isFolderEmpty = page.totalElements === 0;
-
-  //       }),
-  //       catchError(() => {
-  //         this.notificationService.error('Error loading folders');
-  //         return of({ folders: [], totalElements: 0 } as Page );
-  //       })
-  //     );
-  // }
-
-  // onClickCreatesubFolder(): void {
-  //   const newsubFolder: Folder = {
-  //     id: 0,
-  //     name: 'Nova subpasta',
-  //     creationDate: new Date(),
-  //     code: '',
-  //     favorite: false,
-  //     folderLike: false,
-  //     approver: '',
-  //     responsible: '',
-  //     reviews: [],
-  //     subFolders: [],
-  //     parentId: this.parentId,
-  //     documents: [],
-  //     documentCount: '',
-  //     parentFolderName: ''
-  //   };
-
-  //   this.folderService.create(newsubFolder).subscribe(
-  //     (createdFolder) => {
-  //       this.subFolders.push(createdFolder);
-  //       this.refresh();
-  //     },
-  //     (error) => {
-  //       console.error('Erro ao criar pasta:', error);
-  //     }
-  //   );
-  // }
-
-  // propertiesDocument(value: Document): void {
-  //   const documentId = value.id;
-  //   this.documentService.update(documentId, value).subscribe(
-  //     (data) => {
-  //       this.document = data;
-  //       this.visibleUpdateDocument = true;
-
-  //     },
-  //     (error) => {
-  //       console.error('Erro ao obter a lista de versões', error);
-  //     }
-  //   );
-  // }
-
-
-
-  // onDragOver(event: Event): void {
-  //   event.preventDefault();
-  //   event.stopPropagation();
-  // }
-
-  // // onDrop(event: DragEvent): void {
-  // //   event.preventDefault();
-  // //   event.stopPropagation();
-
-  // //   const files = event.dataTransfer?.files;
-
-  // //   if (files && files.length > 0) {
-  // //     const file = files[0];
-  // //     const folderId = this.folder.id;
-
-  // //     this.documentService.uploadFile(file, folderId).subscribe(
-  // //       (updatedDocument: Document) => {
-  // //         console.log('Upload bem-sucedido', updatedDocument);
-  // //         this.refresh();
-  // //       },
-  // //       (error) => {
-  // //         console.error('Erro durante o upload', error);
-  // //       }
-  // //     );
-  // //   }
-  // // }
-
-  // // onFileInputChange(event: any): void {
-  // //   const folderId = this.folder.id;
-  // //   const file = event.target.files[0];
-
-  // //   this.documentService.uploadFile(file, folderId).subscribe(
-  // //     (updatedDocument: Document) => {
-  // //       console.log('Upload bem-sucedido', updatedDocument);
-  // //       this.refresh();
-  // //     },
-  // //     (error) => {
-  // //       console.error('Erro ao fazer upload do arquivo', error);
-  // //     }
-  // //   );
-  // // }
-
-
-
-  // showAccessList(document: Document): void {
-  //   const documentId = document.id;
-
-  //   this.documentService.getAccessedUsers(documentId)
-  //     .subscribe(users => {
-  //       this.users = users;
-  //       this.visibleUser = true;
-  //     });
-  // }
-
-  // updateFolderDocumentCount() {
-  //   for (const folder of this.subFolders) {
-  //     this.documentService.getDocumentCountByFolder(folder.id).subscribe((count) => {
-  //       folder.documentCount = count;
-  //     });
-  //   }
-  // }
-
-  // deleteFolder(folder: Folder): void {
-  //   this.folderService.deleteFolder(folder.id).subscribe(
-  //     () => {
-  //       this.notificationService.success('Pasta excluída com sucesso');
-  //       this.refresh();
-  //     },
-  //     (error) => {
-  //       this.notificationService.error('Erro ao excluir a pasta');
-  //     }
-  //   );
-  // }
-
-  // deleteDocument(document: Document): void {
-  //   this.documentService.deleteDocument(document.id).subscribe(
-  //     () => {
-  //       this.notificationService.success('Documento excluído com sucesso');
-  //       this.refresh();
-  //     },
-  //     (error) => {
-  //       this.notificationService.error('Erro ao excluir o documento');
-  //     }
-  //   );
-  // }
-
-  // deleteSelectedItems() {
-  //   if (this.selectedItems && this.selectedItems.length > 0) {
-  //     for (const item of this.selectedItems) {
-  //       if ((item as Folder).id !== undefined) {
-  //         this.deleteFolder(item as Folder);
-  //       } else if ((item as Document).id !== undefined) {
-  //         this.deleteDocument(item as Document);
-  //       }
-  //     }
-  //     this.selectedItems = [];
-  //   } else {
-  //     console.warn('Nenhum documento ou pasta selecionado.');
-  //   }
-  // }
-
 }
-

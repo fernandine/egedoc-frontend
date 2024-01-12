@@ -5,7 +5,7 @@ import { DocumentFormRoutingModule } from './document-form-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [DocumentFormComponent],
+  declarations: [],
   imports: [
     CommonModule,
     ReactiveFormsModule,

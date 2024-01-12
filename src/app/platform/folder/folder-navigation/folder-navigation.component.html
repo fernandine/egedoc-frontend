@@ -48,7 +48,7 @@
       </ng-template>
     </p-toolbar>
 
-    <p-table [value]="folder.subFolders" [paginator]="true" [first]="first" [rows]="rows" dataKey="id" [rowHover]="true"
+    <p-table [value]="getItemsToDisplay()" [paginator]="true" [first]="first" [rows]="rows" dataKey="id" [rowHover]="true"
       [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']" [showCurrentPageReport]="true"
       [tableStyle]="{'min-width': '50rem'}" [rowsPerPageOptions]="[5, 10, 20]" [(selection)]="selectedFolder">
       <ng-template pTemplate="caption">
@@ -76,34 +76,35 @@
         </tr>
       </ng-template>
 
-      <!------- LISTA DE SUBPASTAS ------->
-
-      <ng-template pTemplate="body" let-folder>
-
-        <tr (dragover)="onDragOver($event)" (drop)="onDrop($event)">
-
+      <ng-template pTemplate="body" let-item>
+        <tr>
           <td>
-            <p-tableCheckbox [value]="folder"></p-tableCheckbox>
+            <p-tableCheckbox [value]="item"></p-tableCheckbox>
           </td>
-          <td (click)="navigateTosubFolder(folder.id, folder)"><i class="pi pi-folder text-2xl text-yellow-600"></i></td>
-
-          <td (click)="navigateTosubFolder(folder.id, folder)" [class.editing]="folder.editing" class="cursor-pointer text-blue-500">
-            <ng-container *ngIf="!folder.editing; else editingMode">
-              {{ folder.name }}
+          <td>
+            <ng-container *ngIf="item.type === 'folder'">
+              <i (click)="navigateTosubFolder(item.id, item)" class="pi pi-folder text-2xl text-yellow-600"></i>
+            </ng-container>
+            <ng-container *ngIf="item.type === 'document'">
+              <i class="pi pi-file text-2xl text-gray-500"></i>
+            </ng-container>
+          </td>
+          <td (click)="navigateTosubFolder(item.id, item)" [class.editing]="item.editing" class="cursor-pointer text-blue-500">
+            <ng-container *ngIf="!item.editing; else editingMode">
+              {{ item.name }}
             </ng-container>
             <ng-template #editingMode>
-              <input [(ngModel)]="folder.newName" (blur)="disableEditing(folder)" (keyup.enter)="disableEditing(folder)">
+              <input [(ngModel)]="item.newName" (blur)="disableEditing(item)" (keyup.enter)="disableEditing(item)">
             </ng-template>
           </td>
-
-          <td>{{ folder.creationDate | date:"dd/MM/yyyy" }}</td>
-          <td>{{ folder.code }}</td>
-          <td>{{ folder.documentCount || 0 }}</td>
+          <td>{{ item.creationDate | date:"dd/MM/yyyy" }}</td>
+          <td>{{ item.code }}</td>
+          <td *ngIf="item.type === 'folder'">{{ item.documentCount || 0 }}</td>
+          <td></td>
           <td><i class="pi pi-thumbs-up"></i></td>
           <td><i class="pi pi-star"></i></td>
           <td><i class="pi pi-comment"></i></td>
           <td><i class="pi pi-share-alt"></i></td>
-
           <td>
             <a pRipple
               class="flex px-6 p-3 lg:px-3 lg:py-2 align-items-center text-600 hover:text-900 hover:surface-100 font-medium border-round cursor-pointer transition-colors transition-duration-150"
@@ -114,7 +115,7 @@
             <ul appendTo="body"
               class="list-none py-0 px-6 m-0 lg:px-0 border-round shadow-0 lg:shadow-2 lg:border-1 border-50 lg:absolute surface-overlay hidden -translate-x-100 origin-top w-full lg:w-12rem cursor-pointer">
               <li>
-                <a pRipple (click)="enableEditing(folder)"
+                <a pRipple (click)="enableEditing(item)"
                   class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
                   <span class="font-medium">Renomear</span>
                 </a>
@@ -134,61 +135,6 @@
             </ul>
           </td>
         </tr>
-        <input type="file" #fileInput style="display: none">
-
-
-        <!------- LISTA DE DOCUMENTOS ------->
-
-        <ng-container *ngIf="documents$ | async as documentPage">
-          <tr *ngFor="let document of documentPage.documents">
-            <td>
-              <p-tableCheckbox [value]="document"></p-tableCheckbox>
-            </td>
-            <td><i class="pi pi-file text-2xl text-gray-500"></i></td>
-
-            <td class="cursor-pointer text-blue-500">
-              {{ document.name }}
-            </td>
-
-            <td>{{ document.creationDate | date:"dd/MM/yyyy" }}</td>
-            <td>{{ document.code }}</td>
-            <td></td>
-            <td><i class="pi pi-thumbs-up"></i></td>
-            <td><i class="pi pi-star"></i></td>
-            <td><i class="pi pi-comment"></i></td>
-            <td><i class="pi pi-share-alt"></i></td>
-
-            <td>
-              <a pRipple
-                class="flex px-6 p-3 lg:px-3 lg:py-2 align-items-center text-600 hover:text-900 hover:surface-100 font-medium border-round cursor-pointer transition-colors transition-duration-150"
-                pStyleClass="@next" enterClass="hidden" enterActiveClass="scalein" leaveToClass="hidden"
-                leaveActiveClass="fadeout" [hideOnOutsideClick]="true">
-                <i class="pi pi-ellipsis-v"></i>
-              </a>
-              <ul appendTo="body"
-                class="list-none py-0 px-6 m-0 lg:px-0 border-round shadow-0 lg:shadow-2 lg:border-1 border-50 lg:absolute surface-overlay hidden -translate-x-100 origin-top w-full lg:w-12rem cursor-pointer">
-                <li>
-                  <a pRipple
-                    class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
-                    <span class="font-medium">Renomear</span>
-                  </a>
-                </li>
-                <li>
-                  <a pRipple
-                    class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
-                    <span class="font-medium">Atualizar</span>
-                  </a>
-                </li>
-                <li>
-                  <a pRipple
-                    class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
-                    <span class="font-medium">Propriedades</span>
-                  </a>
-                </li>
-              </ul>
-            </td>
-          </tr>
-        </ng-container>
       </ng-template>
 
       <div class="card flex justify-content-center">
