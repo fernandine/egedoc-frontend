@@ -18,5 +18,5 @@ export interface Folder {
   parentId: number;
   parentFolderName: string;
   editing?: boolean;
-
+  fullPath: string;
 }

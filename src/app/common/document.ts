@@ -14,11 +14,15 @@ export interface Document {
   creationDate: Date;
   lastUpdate: Date;
   dueDate: Date;
+  temporality: number;
+  purge: Date;
   approved: boolean;
+  allowDownload: boolean;
   documentLike: boolean;
   digitalSignature: string;
   code: string;
   metadata: string;
+  note: string;
   confidential: Confidential
   responsible: string;
   notify: boolean;
@@ -28,7 +32,7 @@ export interface Document {
   approvalStatus: ApprovalStatus;
   accessPermission: AccessPermission;
   folderId: number;
-  tags: Tag[];
+  tags: string[];
   versions: Version[];
   editing?: boolean;
 }

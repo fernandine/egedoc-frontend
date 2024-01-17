@@ -40,32 +40,28 @@ export class FolderListComponent {
   parentId!: number;
   folder!: Folder;
   selected!: Folder[] | null;
-  breadcrumbItems: MenuItem[] = [];
   folderId!: number;
 
   constructor(
     private folderService: FolderService,
-    private documentService: DocumentService,
     private notificationService: NotificationService,
     private router: Router,
     private route: ActivatedRoute,
     private headerService: HeaderService,
-
-
+    private documentService: DocumentService
   ) { }
 
   ngOnInit() {
+    this.headerService.setHeaderForSite(false);
     this.route.paramMap.subscribe(params => {
       const folderId = params.get('id');
+
       if (folderId) {
+        this.folderId = this.folder.id;
         this.loadById(this.folder);
       }
     });
     this.refresh();
-
-  }
-  ngAfterViewInit() {
-    this.headerService.setHeaderForSite(false);
   }
 
   refresh(pageEvent: PageEvent = {
@@ -78,6 +74,9 @@ export class FolderListComponent {
           tap((page) => {
             this.first = pageEvent.first;
             this.rows = pageEvent.rows;
+            this.folders = page.folders;
+
+            this.updateFolderDocumentCount();
           }),
           catchError(() => {
             this.notificationService.error('Error loading folders');
@@ -90,7 +89,7 @@ export class FolderListComponent {
   loadById(folder: Folder): void {
     if (folder.id !== undefined) {
       this.folderService.loadById(folder.id).subscribe(() => {
-        this.router.navigate(['folders', folder.id]);
+        this.router.navigate(['/folders', folder.id], { relativeTo: this.route });
       });
     } else {
       console.error('Folder id is undefined.');
@@ -112,7 +111,8 @@ export class FolderListComponent {
       parentId: this.parentId,
       documents: [],
       documentCount: '',
-      parentFolderName: ''
+      parentFolderName: '',
+      fullPath: ''
     };
     this.folderService.create(newFolderData).subscribe(
       (createdFolder) => {
@@ -136,11 +136,11 @@ export class FolderListComponent {
   enableEditing(subFolder: any): void {
     subFolder.editing = true;
     subFolder.newName = subFolder.name;
+
   }
 
   disableEditing(subFolder: any): void {
     if (subFolder.editing && subFolder.name !== subFolder.newName) {
-
       this.folderService.update(subFolder.id, { name: subFolder.newName })
         .subscribe(() => {
           this.refresh();

@@ -3,4 +3,5 @@ export interface Review {
   comment: string;
   rating: number;
   folderId: number;
+  documentId: number;
 }

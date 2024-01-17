@@ -1,13 +1,9 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MenuItem, SharedModule } from 'primeng/api';
-import { Observable, catchError, map, of, tap } from 'rxjs';
+import { SharedModule } from 'primeng/api';
 import { Document } from 'src/app/common/document';
-import { DocumentPage } from 'src/app/common/document-page';
 import { Folder } from 'src/app/common/folder';
-import { Page } from 'src/app/common/page';
-import { User } from 'src/app/common/user';
-import { Version } from 'src/app/common/version';
+
 import { DocumentService } from 'src/app/services/document.service';
 import { FolderService } from 'src/app/services/folder.service';
 import { HeaderService } from 'src/app/services/header.service';
@@ -20,19 +16,15 @@ import { ButtonModule } from 'primeng/button';
 import { StyleClassModule } from 'primeng/styleclass';
 import { RippleModule } from 'primeng/ripple';
 import { ToolbarModule } from 'primeng/toolbar';
+import { BreadcrumbComponent } from "../breadcrumb/breadcrumb.component";
+import { BadgeModule } from 'primeng/badge';
 
-interface PageEvent {
-  first: number;
-  rows: number;
-  page: number;
-  pageCount: number;
-}
 @Component({
-    selector: 'app-folder-navigation',
-    templateUrl: './folder-navigation.component.html',
-    styleUrls: ['./folder-navigation.component.scss'],
-    standalone: true,
-    imports: [ToolbarModule, SharedModule, RippleModule, StyleClassModule, ButtonModule, FileUploadModule, TableModule, NgIf, FormsModule, NgFor, AsyncPipe, DatePipe]
+  selector: 'app-folder-navigation',
+  templateUrl: './folder-navigation.component.html',
+  styleUrls: ['./folder-navigation.component.scss'],
+  standalone: true,
+  imports: [ToolbarModule, SharedModule, RippleModule, StyleClassModule, BadgeModule, ButtonModule, FileUploadModule, TableModule, NgIf, FormsModule, NgFor, AsyncPipe, DatePipe, BreadcrumbComponent]
 })
 export class FolderNavigationComponent {
 
@@ -42,9 +34,11 @@ export class FolderNavigationComponent {
 
   documents: Document[] = [];
   folder!: Folder;
-  selectedFolder: Folder[] | null = null;
+  document!: Document;
   folderId!: number;
-
+  selectedItems: (Folder | Document)[] | null = null;
+  isDragging = false;
+  parentId!: number;
   constructor(
     private documentService: DocumentService,
     private route: ActivatedRoute,
@@ -71,17 +65,34 @@ export class FolderNavigationComponent {
     this.folderService.loadById(this.folderId).subscribe(
       (folder: Folder) => {
         this.folder = folder;
+        this.subFolders = folder.subFolders;
+        this.documents = folder.documents;
+        this.updateFolderDocumentCount();
 
-     },
+      },
       (error) => {
         console.error('Erro ao carregar detalhes da pasta:', error);
       }
     );
   }
 
-  navigateTosubFolder(subFolderId: number, folder: any): void {
+  navigateToItem(item: Folder | Document): void {
+    if (this.isFolder(item)) {
+      this.navigateTosubFolder(item);
+    } else if (this.isDocument(item)) {
+      this.navigateToDocument(item.id, item);
+    }
+  }
+
+  navigateTosubFolder(folder: Folder): void {
     if (!folder.editing) {
-      this.router.navigate(['/folders', subFolderId]);
+      this.router.navigate(['../', folder.id], { relativeTo: this.route });
+    }
+  }
+
+  navigateToDocument(documentId: number, document: Document): void {
+    if (!document.editing) {
+      this.router.navigate(['/documents', documentId]);
     }
   }
 
@@ -97,10 +108,12 @@ export class FolderNavigationComponent {
       responsible: '',
       reviews: [],
       subFolders: [],
+      fullPath: '',
       parentId: this.folderId,
       documents: [],
       documentCount: '',
-      parentFolderName: ''
+      parentFolderName: '',
+
     };
     this.folderService.create(newFolderData).subscribe(
       (createdFolder: Folder) => {
@@ -151,7 +164,7 @@ export class FolderNavigationComponent {
 
     const files = event.dataTransfer?.files;
 
-    if (files && files.length > 0) {
+    if (files && files.length >= 0) {
       const file = files[0];
       const folderId = this.folder.id;
       console.log('Dropped file into folder with ID:', folderId);
@@ -159,7 +172,7 @@ export class FolderNavigationComponent {
       this.documentService.uploadFile(file, folderId).subscribe(
         (updatedDocument: Document) => {
           console.log('Upload bem-sucedido', updatedDocument);
-            //this.getDocumentByFolderId(folderId);
+          this.loadFolderDetails();
         },
         (error) => {
           console.error('Erro durante o upload', error);
@@ -168,24 +181,63 @@ export class FolderNavigationComponent {
     }
   }
 
-  deleteFolder(folder: Folder): void {
-    this.folderService.deleteFolder(folder.id).subscribe(
-      () => {
-        console.log('Pasta deletada com sucesso!');
-        this.loadFolderDetails();
-      },
-      (error) => {
-        console.error('Erro ao deletar pasta:', error);
-      }
-    );
+  onDragEnter(): void {
+    this.isDragging = true;
   }
 
-  deleteSelectedFolders() {
-    if (this.selectedFolder && this.selectedFolder.length > 0) {
-      for (const folder of this.selectedFolder) {
-        this.deleteFolder(folder);
-      }
-      this.selectedFolder = [];
+  onDragLeave(): void {
+    this.isDragging = true;
+  }
+
+  deleteItem(item: Folder | Document): void {
+    if (this.isFolder(item)) {
+      this.folderService.deleteFolder(item.id).subscribe(
+        () => {
+          console.log('Pasta deletada com sucesso!');
+          this.loadFolderDetails();
+        },
+        (error) => {
+          console.error('Erro ao deletar pasta:', error);
+        }
+      );
+    } else if (this.isDocument(item)) {
+      this.documentService.deleteDocument(item.id).subscribe(
+        () => {
+          console.log('Documento deletado com sucesso!');
+
+          this.loadFolderDetails();
+        },
+        (error) => {
+          console.error('Erro ao deletar documento:', error);
+        }
+      );
     }
   }
+  isFolder(item: Folder | Document): item is Folder {
+    return 'subFolders' in item;
+  }
+
+  isDocument(item: Folder | Document): item is Document {
+    return !('subFolders' in item);
+  }
+
+  deleteSelectedItems() {
+    if (this.selectedItems && this.selectedItems.length > 0) {
+      for (const item of this.selectedItems) {
+        this.deleteItem(item);
+      }
+      this.selectedItems = [];
+    }
+  }
+
+  updateFolderDocumentCount() {
+    for (const folder of this.subFolders) {
+      this.documentService.getDocumentCountByFolder(folder.id).subscribe((count) => {
+        folder.documentCount = count;
+      });
+    }
+  }
+
+
+
 }

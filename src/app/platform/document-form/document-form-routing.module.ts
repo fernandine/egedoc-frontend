@@ -4,6 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   { path: '', component: DocumentFormComponent },
+  { path: ':id', component: DocumentFormComponent },
+
 ];
 
 @NgModule({

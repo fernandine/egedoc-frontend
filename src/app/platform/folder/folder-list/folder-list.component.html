@@ -1,7 +1,4 @@
 
-
-<!-- <app-breadcrumb [items]="breadcrumbItems"></app-breadcrumb> -->
-
 <div *ngIf="folders$ | async as page">
 <div class="card p-2">
   <p-toast></p-toast>
@@ -78,11 +75,7 @@
         <th pSortableColumn="category" style="min-width:10rem">Código <p-sortIcon field="category"></p-sortIcon></th>
         <th>
           <p>Documentos Integrados</p>
-        </th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
+        </th><th></th><th></th><th></th><th></th><th></th>
       </tr>
     </ng-template>
 
@@ -105,7 +98,7 @@
 
         <td>{{ folder.creationDate | date:"dd/MM/yyyy" }}</td>
         <td>{{ folder.code }}</td>
-        <td>{{ folder.documentCount || 0 }}</td>
+        <td>{{ folder.documentCount }}</td>
         <td><i class="pi pi-thumbs-up"></i></td>
         <td><i class="pi pi-star"></i></td>
         <td><i class="pi pi-comment"></i></td>

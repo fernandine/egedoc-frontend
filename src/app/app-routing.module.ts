@@ -31,8 +31,7 @@ const routes: Routes = [
   // ########## PLATFORM ###########
 
   { path: 'folders', loadChildren: () => import('./platform/folder/folder-list.module').then(m => m.FolderListModule) },
-  // { path: 'folder-navigation', loadChildren: () => import('./platform/folder/folder-navigation/folder-navigation.module').then(m => m.FolderNavigationModule) },
-  { path: '**', redirectTo: '' }
+   { path: 'documents', loadChildren: () => import('./platform/document-form/document-form.module').then(m => m.DocumentFormModule) },
 ];
 
 @NgModule({

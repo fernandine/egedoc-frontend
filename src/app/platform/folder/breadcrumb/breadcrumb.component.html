@@ -1,0 +1,14 @@
+<nav aria-label="breadcrumb" class="custom-breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item" *ngFor="let item of getBreadcrumbItems(); let last = last">
+      <ng-container *ngIf="!last; else lastItem">
+        <a routerLink="/folders" class="text-yellow-600 breadcrumb-link" [innerHTML]="item"></a>
+        <span class="breadcrumb-separator">/</span>
+      </ng-container>
+      <ng-template #lastItem>
+        <span [innerHTML]="item" class="breadcrumb-link"></span>
+      </ng-template>
+    </li>
+  </ol>
+</nav>
+

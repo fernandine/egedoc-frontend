@@ -5,18 +5,18 @@
       <p class="m-0 mb-4 p-0 text-600 line-height-3 mr-3">Odio euismod lacinia at quis risus sed vulputate odio. Non
         nisi est sit amet.
         Egestas integer eget aliquet nibh praesent tristique magna.</p>
-      <form [formGroup]="form" (ngSubmit)="onSubmit()" class="grid formgrid p-fluid">
+      <form [formGroup]="form" (ngSubmit)="onUpdate(documentId)" class="grid formgrid p-fluid">
 
-        <div class="field mb-4 col-6">
-          <label for="title" class="font-medium">Título</label>
-          <input formControlName="title" id="title" type="text" pInputText>
+        <div class="field mb-4 col-5">
+          <label for="name" class="font-medium">Título</label>
+          <input formControlName="name" id="name" type="text" pInputText>
         </div>
-        <div class="field mb-4 col-12 md:col-6">
-          <label for="versions" class="font-medium">Observação</label>
-          <!-- <textarea  formControlName="description" id="description" type="text" pInputTextarea rows="4" [autoResize]="true"></textarea> -->
+        <div class="field mb-4 col-12 md:col-2">
+          <label for="code" class="font-medium">Código</label>
+          <input formControlName="code" id="code" type="text" pInputText>
         </div>
-        <div class="field mb-4 col-12 md:col-4">
-          <label for="category" class="font-medium">Tags</label>
+        <div class="field mb-4 col-12 md:col-5">
+          <label for="tags" class="font-medium">Tags</label>
           <p-chips formControlName="tags"></p-chips>
         </div>
         <div class="field mb-4 col-12 md:col-3">
@@ -24,17 +24,20 @@
           <input formControlName="reference" id="reference" type="text" pInputText>
         </div>
 
-        <div class="field mb-4 col-12 md:col-5">
+        <div class="field mb-4 col-12 md:col-4">
           <label for="tags" class="font-medium">Descrição da Versão/Revisão</label>
-          <!-- <textarea  formControlName="description" id="description" type="text" pInputTextarea rows="4" [autoResize]="true"></textarea> -->
+          <textarea  formControlName="description" id="description" type="text" pInputTextarea rows="4" [autoResize]="true"></textarea>
         </div>
-
-          <div class="field mb-4 col-12 md:col-4">
+        <div class="field mb-4 col-12 md:col-4">
+          <label for="note" class="font-medium">Observação</label>
+          <textarea formControlName="note" id="note" type="text" pInputTextarea rows="4" [autoResize]="true"></textarea>
+        </div>
+          <div class="field mb-4 col-12 md:col-3">
             <label for="reference" class="font-medium">Referência</label>
             <input formControlName="reference" id="reference" type="text" pInputText>
           </div>
 
-        <div class="field mb-4 col-12 md:col-4">
+        <div class="field mb-4 col-12 md:col-3">
           <label for="documentType" class="font-medium">Tipo documental</label>
           <p-dropdown
           id="types"
@@ -44,14 +47,18 @@
         ></p-dropdown>
           </div>
 
+          <div class="field mb-4 col-12 md:col-2">
+            <label for="temporality" class="font-medium">Temporalidade (prazo de guarda)</label>
+            <input formControlName="temporality" min="1" id="metadata" type="number" pInputText>
+        </div>
         <div class="field mb-4 col-12 md:col-4">
-          <label for="metadata" class="font-medium">Metadata</label>
-          <input formControlName="metadata" id="metadata" type="text" pInputText>
+          <label for="purge" class="font-medium">Data do expurgo</label>
+          <p-calendar formControlName="purge" dueDate="input" [showIcon]="true" inputId="dueDate"></p-calendar>
         </div>
         <div class="surface-100 mb-3 col-12" style="height:2px"></div>
 
         <div class="field mb-4 col-12 md:col-4">
-            <label for="dueDate" class="font-medium">Vencimento</label>
+            <label for="dueDate" class="font-medium">Vencimento do documento</label>
             <p-calendar formControlName="dueDate" dueDate="input" [showIcon]="true" inputId="dueDate"></p-calendar>
         </div>
 
@@ -74,7 +81,7 @@
         <div class="field mb-4 col-12 flex flex-row flex-wrap ">
 
           <div class="flex align-items-center mr-5">
-            <p-inputSwitch formControlName="respoallowDownloadnsible" inputId="allowDownload"></p-inputSwitch>
+            <p-inputSwitch formControlName="allowDownload" inputId="allowDownload"></p-inputSwitch>
             <span class="ml-2">Permitir Download?</span>
           </div>
 
@@ -86,7 +93,7 @@
         </div>
         <div class="surface-100 mb-3 col-12" style="height:2px"></div>
         <div class="col-12">
-          <button pButton pRipple label="Salvar" class="w-auto mt-3"></button>
+          <button pButton pRipple label="Salvar" class="w-auto mt-3 px-7"></button>
         </div>
       </form>
     </div>
