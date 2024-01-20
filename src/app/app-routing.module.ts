@@ -31,7 +31,7 @@ const routes: Routes = [
   // ########## PLATFORM ###########
 
   { path: 'folders', loadChildren: () => import('./platform/folder/folder-list.module').then(m => m.FolderListModule) },
-   { path: 'documents', loadChildren: () => import('./platform/document-form/document-form.module').then(m => m.DocumentFormModule) },
+   { path: 'documents', loadChildren: () => import('./platform/document/document-form.module').then(m => m.DocumentFormModule) },
 ];
 
 @NgModule({

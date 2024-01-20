@@ -1,7 +1,8 @@
+
 export interface Review {
-  id: string;
+  id: number;
   comment: string;
-  rating: number;
-  folderId: number;
   documentId: number;
+  folderId: number;
 }
+

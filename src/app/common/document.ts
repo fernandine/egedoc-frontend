@@ -18,7 +18,8 @@ export interface Document {
   purge: Date;
   approved: boolean;
   allowDownload: boolean;
-  documentLike: boolean;
+  favorite: boolean;
+  itemLike: boolean;
   digitalSignature: string;
   code: string;
   metadata: string;

@@ -46,7 +46,7 @@ export class FolderService {
     return this.http.post<Folder>(this.apiUrl, folder);
   }
 
-  update(id: string, value: any): Observable<Folder> {
+  update(id: number, value: any): Observable<Folder> {
     return this.http.put<Folder>(`${this.apiUrl}/${id}`, value);
   }
 

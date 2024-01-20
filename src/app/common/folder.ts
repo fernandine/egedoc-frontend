@@ -8,7 +8,7 @@ export interface Folder {
   creationDate: Date;
   code: string;
   favorite: boolean;
-  folderLike: boolean;
+  itemLike: boolean;
   approver: string;
   responsible: string;
   reviews: Review[];
@@ -19,4 +19,5 @@ export interface Folder {
   parentFolderName: string;
   editing?: boolean;
   fullPath: string;
+
 }

@@ -103,7 +103,7 @@ export class FolderListComponent {
       creationDate: new Date(),
       code: '',
       favorite: false,
-      folderLike: false,
+      itemLike: false,
       approver: '',
       responsible: '',
       reviews: [],
@@ -183,4 +183,5 @@ export class FolderListComponent {
       this.selected = [];
     }
   }
+
 }

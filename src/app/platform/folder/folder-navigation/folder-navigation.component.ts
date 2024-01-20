@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, Input, Renderer2 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SharedModule } from 'primeng/api';
+import { SharedModule, MessageService } from 'primeng/api';
 import { Document } from 'src/app/common/document';
 import { Folder } from 'src/app/common/folder';
 
@@ -18,19 +18,42 @@ import { RippleModule } from 'primeng/ripple';
 import { ToolbarModule } from 'primeng/toolbar';
 import { BreadcrumbComponent } from "../breadcrumb/breadcrumb.component";
 import { BadgeModule } from 'primeng/badge';
+import { CommentsComponent } from '../../comments-dialog/comments.component';
+import { Review } from 'src/app/common/review';
 
 @Component({
   selector: 'app-folder-navigation',
   templateUrl: './folder-navigation.component.html',
   styleUrls: ['./folder-navigation.component.scss'],
   standalone: true,
-  imports: [ToolbarModule, SharedModule, RippleModule, StyleClassModule, BadgeModule, ButtonModule, FileUploadModule, TableModule, NgIf, FormsModule, NgFor, AsyncPipe, DatePipe, BreadcrumbComponent]
+  providers: [MessageService],
+  imports: [
+    ToolbarModule,
+    SharedModule,
+     RippleModule,
+     StyleClassModule,
+     BadgeModule,
+     ButtonModule,
+     FileUploadModule,
+     TableModule,
+     NgIf,
+     FormsModule,
+     NgFor,
+     AsyncPipe,
+     DatePipe,
+     BreadcrumbComponent,
+    CommentsComponent]
 })
 export class FolderNavigationComponent {
-
+  showCommentsDialog = false;
+  someDocumentId: number | null = null;
+  comment!: string;
+  itemLike: boolean = false;
+  favorite: boolean = false;
   subFolders: Folder[] = [];
   first = 0;
   rows = 10;
+  selectedItem: Folder | Document | null = null;
 
   documents: Document[] = [];
   folder!: Folder;
@@ -43,6 +66,7 @@ export class FolderNavigationComponent {
     private documentService: DocumentService,
     private route: ActivatedRoute,
     private notificationService: NotificationService,
+    private messageService: MessageService,
     private folderService: FolderService,
     private router: Router,
     private headerService: HeaderService
@@ -55,6 +79,11 @@ export class FolderNavigationComponent {
       this.folderId = +params['id'];
       this.loadFolderDetails();
     });
+  }
+
+  openCommentsDialog(item: Folder | Document): void {
+    this.selectedItem = item;
+    this.showCommentsDialog = true;
   }
 
   getItemsToDisplay() {
@@ -103,7 +132,7 @@ export class FolderNavigationComponent {
       creationDate: new Date(),
       code: '',
       favorite: false,
-      folderLike: false,
+      itemLike: false,
       approver: '',
       responsible: '',
       reviews: [],
@@ -238,6 +267,40 @@ export class FolderNavigationComponent {
     }
   }
 
+  toggleLike(item: Folder | Document) {
+    item.itemLike = !item.itemLike;
+    this.updateItem(item, { itemLike: item.itemLike });
+  }
 
+  toggleFavorite(item: Folder | Document) {
+    item.favorite = !item.favorite;
+    this.updateItem(item, { favorite: item.favorite });
+    this.messageService.add({ severity: 'info', summary: 'Favoritado!' });
+
+  }
+
+  updateItem(item: Folder | Document, updatedProperties: any) {
+    const updatedItem = { ...item, ...updatedProperties };
+    if (this.isDocument(item)) {
+      this.documentService.update(item.id, updatedItem).subscribe(
+        (updatedDocument: Document) => {
+          // Atualize o item na matriz selectedItems se necessário
+        },
+        (error) => {
+          console.error('Erro ao atualizar o documento:', error);
+        }
+      );
+    } else if (this.isFolder(item)) {
+      this.folderService.update(item.id, updatedItem).subscribe(
+        (updatedFolder: Folder) => {
+          // Atualize o item na matriz selectedItems se necessário
+        },
+        (error) => {
+          console.error('Erro ao atualizar a pasta:', error);
+        }
+      );
+    }
+  }
 
 }
+

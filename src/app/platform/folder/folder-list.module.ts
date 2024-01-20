@@ -3,8 +3,9 @@ import { FolderListRoutingModule } from './folder-list-routing.module';
 
 @NgModule({
     imports: [
-    FolderListRoutingModule
+    FolderListRoutingModule,
 
-]
+],
+
 })
 export class FolderListModule { }

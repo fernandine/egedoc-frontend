@@ -99,10 +99,30 @@
           <td>{{ item.code }}</td>
           <td>{{ item.documentCount }}</td>
           <td></td>
-          <td><i class="pi pi-thumbs-up"><p-badge value="2" severity="warning"></p-badge></i></td>
-          <td><i class="pi pi-star"></i><p-badge value="2" severity="warning"></p-badge></td>
-          <td><i class="pi pi-comment"></i><p-badge value="2" severity="warning"></p-badge></td>
-          <td><i class="pi pi-share-alt"></i><p-badge value="2" severity="warning"></p-badge></td>
+
+          <td>
+            <i *ngIf="!item.itemLike" class="cursor-pointer fa-regular fa-thumbs-up" (click)="toggleLike(item)"></i>
+            <i *ngIf="item.itemLike" class="cursor-pointer fa-solid fa-thumbs-up" (click)="toggleLike(item)"></i>
+            <!-- <p-badge value="2" severity="warning"></p-badge> -->
+          </td>
+
+          <td>
+            <i *ngIf="!item.favorite" class="cursor-pointer pi pi-star" (click)="toggleFavorite(item)"></i>
+            <i *ngIf="item.favorite" class="cursor-pointer pi pi-star-fill" (click)="toggleFavorite(item)"></i>
+            <!-- <p-badge value="2" severity="warning"></p-badge> -->
+          </td>
+
+
+          <!-- <td (click)="openCommentsDialog()">
+            <i *ngIf="!item.comment" class="cursor-pointer fa-regular fa-comment"></i>
+            <i *ngIf="item.comment" class="cursor-pointer fa-solid fa-comment"></i>
+             <p-badge value="2" severity="warning"></p-badge>
+          </td> -->
+
+          <td><i (click)="openCommentsDialog(item)" class="pi pi-comment"></i></td>
+
+          <td><i class="pi pi-share-alt"></i></td>
+
           <td>
             <a pRipple
               class="flex px-6 p-3 lg:px-3 lg:py-2 align-items-center text-600 hover:text-900 hover:surface-100 font-medium border-round cursor-pointer transition-colors transition-duration-150"
@@ -151,8 +171,8 @@
         <div class="ml-2 flex align-items-center justify-content-between">{{ documents ?
           documents.length : 0 }} arquivo(s)
         </div>
-
       </ng-template>
-
     </p-table>
   </div>
+
+  <app-comments [showDialog]="showCommentsDialog" [selectedItem]="selectedItem"></app-comments>

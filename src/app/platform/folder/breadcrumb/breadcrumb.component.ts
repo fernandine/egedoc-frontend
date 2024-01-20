@@ -16,7 +16,7 @@ export class BreadcrumbComponent {
     this.getBreadcrumbItems();
   }
   getBreadcrumbItems(): string[] {
-    let items: string[] = this.fullPath ? this.fullPath.split('>') : [];
+    let items: string[] = this.fullPath ? this.fullPath?.split('>') : [];
 
     items = ['<i class="pi pi-home"></i>'].concat(items);
 
