@@ -64,6 +64,7 @@ export class FolderNavigationComponent {
   selectedItem: Folder | Document | null = null;
   documents: Document[] = [];
   folder!: Folder;
+  url: string = '';
 
   document!: Document;
   folderId!: number;
@@ -89,6 +90,10 @@ export class FolderNavigationComponent {
       this.folderId = params['id'];
       this.loadFolderDetails();
     });
+  }
+
+  updateUrl(): string {
+    return this.url = 'http://localhost:8080/documents/' + this.folderId + '/upload';
   }
 
   openReviewDialog(item: Folder | Document): void {
@@ -194,13 +199,15 @@ export class FolderNavigationComponent {
     }
   }
 
-  onUpload(event: UploadEvent) {
-    this.messageService.add({
-      severity: 'info',
-      summary: 'Sucesso',
-      detail: 'Arquivo enviado',
-    });
-    this.loadFolderDetails();
+  onUpload(event: UploadEvent): void {
+    this.progress = 0;
+    const interval = setInterval(() => {
+      this.progress += 80;
+      if (this.progress >= 100) {
+        clearInterval(interval);
+        this.loadFolderDetails();
+      }
+    }, 1000);
   }
 
   onDragEnter(): void {
