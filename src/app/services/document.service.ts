@@ -1,10 +1,11 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
-import { Observable, first, tap } from 'rxjs';
+import { HttpClient, HttpEvent } from '@angular/common/http';
+import { EventEmitter, Injectable, inject } from '@angular/core';
+import { Observable, first, map, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Document } from '../common/document';
 import { User } from '../common/user';
 import { DocumentPage } from '../common/document-page';
+import { PasteRequest } from '../common/paste-request';
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ export class DocumentService {
 
   private apiUrl = environment.apiUrl + '/documents';
   public cache: Document[] = [];
+  private uploadUrl!: string;
 
   private http = inject(HttpClient);
 
@@ -51,11 +53,18 @@ export class DocumentService {
     return this.http.post<Document>(this.apiUrl, doc);
   }
 
-  uploadFile(file: File, folderId: number): Observable<Document> {
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('folderId', folderId.toString());
-    return this.http.post<Document>(`${this.apiUrl}/${folderId}/upload`, formData);
+  uploadFile(formData: FormData, folderId: number): Observable<Document> {
+    this.setUploadUrl(folderId);
+
+    const options = {
+      reportProgress: true,
+    };
+
+    return this.http.post<Document>(this.uploadUrl, formData, options);
+  }
+
+  setUploadUrl(folderId: number): void {
+    this.uploadUrl = `${this.apiUrl}/documents/${folderId}/upload`;
   }
 
   update(id:number, value: any): Observable<Document> {
@@ -67,4 +76,50 @@ export class DocumentService {
     return this.http.delete<void>(url);
   }
 
+  findByFavorite(favorite: boolean): Observable<Document[]> {
+    const url = `${this.apiUrl}/favorites?favorite=${favorite}`;
+    return this.http.get<Document[]>(url);
+  }
+
+  toggleFavorite(document: Document): Observable<Document> {
+    document.favorite = !document.favorite;
+    const url = `${this.apiUrl}/${document.id}`;
+    return this.http.put<Document>(url, document).pipe(
+      map(updatedDocument => {
+        const cachedDocumentIndex = this.cache.findIndex(p => p.id === updatedDocument.id);
+        if (cachedDocumentIndex !== -1) {
+          this.cache[cachedDocumentIndex] = updatedDocument;
+        }
+        return updatedDocument;
+      })
+    );
+  }
+  documentCopied: EventEmitter<Document> = new EventEmitter<Document>();
+
+
+copy(documentId: number): Observable<Document> {
+  const url = `${this.apiUrl}/${documentId}/copy`;
+  return this.http.post<Document>(url, documentId);
+}
+
+  copyAndPasteDocument(request: PasteRequest): Observable<Document> {
+    return this.http.post<Document>(`${this.apiUrl}/copy-paste`, request);
+  }
+
+  cutAndPasteDocument(request: PasteRequest): Observable<Document> {
+    return this.http.post<Document>(`${this.apiUrl}/cut-paste`, request);
+  }
+
+  cutDocument(request: PasteRequest): Observable<Document> {
+    return this.http.post<Document>(`${this.apiUrl}/cut`, request);
+  }
+
+  // copyDocumentId(documentId: number) {
+  //   this.selection.setCopiedDocumentId(documentId);
+  // }
+
+  // copyDocument(documentId: number, folderId: number): Observable<any> {
+  //   const copiedDocumentId = this.selection.getCopiedDocumentId();
+  //   return this.http.post<any>(`${this.apiUrl}/${folderId}/copy`, { documentId: copiedDocumentId });
+  // }
 }

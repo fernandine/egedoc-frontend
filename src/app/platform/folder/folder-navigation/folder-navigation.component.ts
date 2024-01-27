@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, Renderer2 } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SharedModule, MessageService } from 'primeng/api';
 import { Document } from 'src/app/common/document';
@@ -9,9 +9,9 @@ import { FolderService } from 'src/app/services/folder.service';
 import { HeaderService } from 'src/app/services/header.service';
 import { NotificationService } from 'src/app/services/notification.service';
 import { FormsModule } from '@angular/forms';
-import { NgIf, NgFor, AsyncPipe, DatePipe } from '@angular/common';
+import { NgIf, NgFor, AsyncPipe, DatePipe, CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
-import { FileUploadModule } from 'primeng/fileupload';
+import { FileUploadModule, UploadEvent } from 'primeng/fileupload';
 import { ButtonModule } from 'primeng/button';
 import { StyleClassModule } from 'primeng/styleclass';
 import { RippleModule } from 'primeng/ripple';
@@ -19,7 +19,10 @@ import { ToolbarModule } from 'primeng/toolbar';
 import { BreadcrumbComponent } from "../breadcrumb/breadcrumb.component";
 import { BadgeModule } from 'primeng/badge';
 import { CommentsComponent } from '../../comments-dialog/comments.component';
-import { Review } from 'src/app/common/review';
+import { SelectionService } from 'src/app/services/selection.service';
+import { ProgressBarModule } from 'primeng/progressbar';
+import { ToastModule } from 'primeng/toast';
+
 
 @Component({
   selector: 'app-folder-navigation',
@@ -28,23 +31,28 @@ import { Review } from 'src/app/common/review';
   standalone: true,
   providers: [MessageService],
   imports: [
+    CommonModule,
     ToolbarModule,
+    FileUploadModule,
+    ProgressBarModule,
     SharedModule,
      RippleModule,
      StyleClassModule,
      BadgeModule,
      ButtonModule,
-     FileUploadModule,
      TableModule,
+     ToastModule,
      NgIf,
      FormsModule,
      NgFor,
      AsyncPipe,
      DatePipe,
      BreadcrumbComponent,
-    CommentsComponent]
+    CommentsComponent
+  ]
 })
 export class FolderNavigationComponent {
+  progress: number = 0;
   showCommentsDialog = false;
   someDocumentId: number | null = null;
   comment!: string;
@@ -54,39 +62,41 @@ export class FolderNavigationComponent {
   first = 0;
   rows = 10;
   selectedItem: Folder | Document | null = null;
-
   documents: Document[] = [];
   folder!: Folder;
+
   document!: Document;
   folderId!: number;
-  selectedItems: (Folder | Document)[] | null = null;
+  documentId: number | null = null;
+  selectedItems: (Folder | Document)[] = [];
   isDragging = false;
   parentId!: number;
+
   constructor(
-    private documentService: DocumentService,
+    public documentService: DocumentService,
     private route: ActivatedRoute,
     private notificationService: NotificationService,
     private messageService: MessageService,
     private folderService: FolderService,
     private router: Router,
-    private headerService: HeaderService
+    private headerService: HeaderService,
+    private selectionService: SelectionService
   ) { }
 
   ngOnInit(): void {
     this.headerService.setHeaderForSite(false);
-
     this.route.params.subscribe(params => {
-      this.folderId = +params['id'];
+      this.folderId = params['id'];
       this.loadFolderDetails();
     });
   }
 
-  openCommentsDialog(item: Folder | Document): void {
+  openReviewDialog(item: Folder | Document): void {
     this.selectedItem = item;
     this.showCommentsDialog = true;
   }
 
-  getItemsToDisplay() {
+  getItemsToDisplay(): (Folder | Document)[] {
     return this.folder ? [...this.folder.subFolders, ...(this.folder.documents || [])] : [];
   }
 
@@ -107,8 +117,10 @@ export class FolderNavigationComponent {
 
   navigateToItem(item: Folder | Document): void {
     if (this.isFolder(item)) {
+      this.selectionService.setSelectedFolder(item);
       this.navigateTosubFolder(item);
     } else if (this.isDocument(item)) {
+      this.selectionService.setSelectedDocument(item);
       this.navigateToDocument(item.id, item);
     }
   }
@@ -182,32 +194,13 @@ export class FolderNavigationComponent {
     }
   }
 
-  onDragOver(event: Event): void {
-    event.preventDefault();
-    event.stopPropagation();
-  }
-
-  onDrop(event: DragEvent): void {
-    event.preventDefault();
-    event.stopPropagation();
-
-    const files = event.dataTransfer?.files;
-
-    if (files && files.length >= 0) {
-      const file = files[0];
-      const folderId = this.folder.id;
-      console.log('Dropped file into folder with ID:', folderId);
-
-      this.documentService.uploadFile(file, folderId).subscribe(
-        (updatedDocument: Document) => {
-          console.log('Upload bem-sucedido', updatedDocument);
-          this.loadFolderDetails();
-        },
-        (error) => {
-          console.error('Erro durante o upload', error);
-        }
-      );
-    }
+  onUpload(event: UploadEvent) {
+    this.messageService.add({
+      severity: 'info',
+      summary: 'Sucesso',
+      detail: 'Arquivo enviado',
+    });
+    this.loadFolderDetails();
   }
 
   onDragEnter(): void {
@@ -250,6 +243,10 @@ export class FolderNavigationComponent {
     return !('subFolders' in item);
   }
 
+  isFavorite(item: Folder | Document): boolean {
+    return item.favorite;
+  }
+
   deleteSelectedItems() {
     if (this.selectedItems && this.selectedItems.length > 0) {
       for (const item of this.selectedItems) {
@@ -276,7 +273,6 @@ export class FolderNavigationComponent {
     item.favorite = !item.favorite;
     this.updateItem(item, { favorite: item.favorite });
     this.messageService.add({ severity: 'info', summary: 'Favoritado!' });
-
   }
 
   updateItem(item: Folder | Document, updatedProperties: any) {
@@ -284,7 +280,6 @@ export class FolderNavigationComponent {
     if (this.isDocument(item)) {
       this.documentService.update(item.id, updatedItem).subscribe(
         (updatedDocument: Document) => {
-          // Atualize o item na matriz selectedItems se necessário
         },
         (error) => {
           console.error('Erro ao atualizar o documento:', error);
@@ -293,7 +288,6 @@ export class FolderNavigationComponent {
     } else if (this.isFolder(item)) {
       this.folderService.update(item.id, updatedItem).subscribe(
         (updatedFolder: Folder) => {
-          // Atualize o item na matriz selectedItems se necessário
         },
         (error) => {
           console.error('Erro ao atualizar a pasta:', error);
@@ -301,6 +295,7 @@ export class FolderNavigationComponent {
       );
     }
   }
+
 
 }
 

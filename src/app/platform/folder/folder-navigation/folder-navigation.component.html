@@ -1,4 +1,6 @@
-<app-breadcrumb [fullPath]="folder.fullPath"></app-breadcrumb>
+<ng-container *ngIf="folder">
+  <app-breadcrumb [fullPath]="folder.fullPath"></app-breadcrumb>
+</ng-container>
 
   <div class="card p-2">
     <p-toolbar styleClass="mb-4 gap-2">
@@ -41,15 +43,17 @@
       </ng-template>
 
       <ng-template pTemplate="right">
-        <p-fileUpload mode="basic" accept="image/*" chooseIcon="none" [maxFileSize]="1000000" chooseLabel="Importar"
-          class="mr-2 inline-block"></p-fileUpload>
+        <p-toast></p-toast>
+        <p-fileUpload mode="basic" class="mr-2 inline-block" name="file" chooseIcon="none" [maxFileSize]="1000000"
+        [url]="'http://localhost:8080/documents/' + folderId + '/upload'" [auto]="true" chooseLabel="Importar" (onUpload)="onUpload($event)"></p-fileUpload>
         <button pButton pRipple label="Exportar" icon="pi pi-upload mr-2" class="ml-3 p-button-help"></button>
       </ng-template>
     </p-toolbar>
 
     <p-table [value]="getItemsToDisplay()" [paginator]="true" [first]="first" [rows]="rows" dataKey="id" [rowHover]="true"
       [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']" [showCurrentPageReport]="true"
-      [tableStyle]="{'min-width': '50rem'}" [rowsPerPageOptions]="[5, 10, 20]" [(selection)]="selectedItems">
+      [tableStyle]="{'min-width': '50rem'}" [rowsPerPageOptions]="[5, 10, 20]"
+       [(selection)]="selectedItems">
 
       <ng-template pTemplate="caption">
         <div class="flex align-items-center justify-content-between">
@@ -74,7 +78,7 @@
       </ng-template>
 
       <ng-template pTemplate="body" let-item>
-        <tr class="drop-column" pDraggable (dragover)="onDragOver($event)" (drop)="onDrop($event)">
+        <tr class="drop-column" pDraggable >
           <td>
             <p-tableCheckbox [value]="item"></p-tableCheckbox>
           </td>
@@ -106,12 +110,10 @@
             <!-- <p-badge value="2" severity="warning"></p-badge> -->
           </td>
 
-          <td>
-            <i *ngIf="!item.favorite" class="cursor-pointer pi pi-star" (click)="toggleFavorite(item)"></i>
-            <i *ngIf="item.favorite" class="cursor-pointer pi pi-star-fill" (click)="toggleFavorite(item)"></i>
-            <!-- <p-badge value="2" severity="warning"></p-badge> -->
-          </td>
-
+          <td><i class="pi cursor-pointer"
+            [ngClass]="{'pi-star': !isFavorite(item), 'pi-star-fill': isFavorite(item)}"
+            (click)="toggleFavorite(item)">
+          </i></td>
 
           <!-- <td (click)="openCommentsDialog()">
             <i *ngIf="!item.comment" class="cursor-pointer fa-regular fa-comment"></i>
@@ -119,9 +121,9 @@
              <p-badge value="2" severity="warning"></p-badge>
           </td> -->
 
-          <td><i (click)="openCommentsDialog(item)" class="pi pi-comment"></i></td>
+          <td><i (click)="openReviewDialog(item)" class="cursor-pointer pi pi-comment"></i></td>
 
-          <td><i class="pi pi-share-alt"></i></td>
+          <td><i class="cursor-pointer pi pi-share-alt"></i></td>
 
           <td>
             <a pRipple
@@ -159,7 +161,7 @@
       </div>
       <ng-template pTemplate="summary">
         <div class="border-dotted border-gray-500 bg-gray-100  p-4 m-2 text-center drop-column"
-        pDraggable (dragover)="onDragOver($event)" (drop)="onDrop($event)"
+        pDraggable
         *ngIf="subFolders && subFolders.length === 0">
           <p class="font-bold text-gray-500">A pasta está vazia.</p>
           <p class="text-gray-500">Clique em <strong>Novo</strong> para adicionar uma subpasta ou documento</p>
@@ -172,7 +174,12 @@
           documents.length : 0 }} arquivo(s)
         </div>
       </ng-template>
-    </p-table>
-  </div>
 
+    </p-table>
+    <div class="flex flex-column gap-2">
+      <p-progressBar [value]="progress" [showValue]="false" color="bg-yellow-500" [style]="{ height: '5px' }"></p-progressBar>
+      <label class="text-left text-md text-bluegray-500">{{ progress }}% enviando...</label>
+  </div>
+  </div>
+  <p-progressBar [value]="progress" [showValue]="true" [style]="{ marginTop: '10px' }"></p-progressBar>
   <app-comments [showDialog]="showCommentsDialog" [selectedItem]="selectedItem"></app-comments>

@@ -47,13 +47,14 @@
         ></p-dropdown>
           </div>
 
-          <div class="field mb-4 col-12 md:col-2">
-            <label for="temporality" class="font-medium">Temporalidade (prazo de guarda)</label>
-            <input formControlName="temporality" min="1" id="metadata" type="number" pInputText>
+          <div class="field inline mb-4 col-12 md:col-2">
+            <label for="temporality" class="font-medium">Temporalidade(anos)</label>
+            <input formControlName="temporality" min="1" placeholder="prazo de guarda " id="metadata" type="number" pInputText>
         </div>
         <div class="field mb-4 col-12 md:col-4">
           <label for="purge" class="font-medium">Data do expurgo</label>
-          <p-calendar formControlName="purge" dueDate="input" [showIcon]="true" inputId="dueDate"></p-calendar>
+          <p-calendar formControlName="purge" dateFormat="dd/mm/yy"></p-calendar>
+
         </div>
         <div class="surface-100 mb-3 col-12" style="height:2px"></div>
 

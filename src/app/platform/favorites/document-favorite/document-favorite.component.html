@@ -1,0 +1,38 @@
+<div class="card p-2">
+
+  <div class="m-4">
+    <h2>Documentos Favoritos</h2>
+  </div>
+  <p-divider></p-divider>
+
+  <p-toolbar styleClass="mb-4 gap-2">
+    <ng-template pTemplate="left">
+      <button pButton pRipple label="Remover da lista" icon="pi pi-trash mr-2" class="mr-3 p-button-danger"
+        [disabled]="!selected || !selected.length"></button>
+
+      <button pButton pRipple label="Atualizar" icon="pi pi-refresh mr-2" class="p-button-help"></button>
+    </ng-template>
+  </p-toolbar>
+    <p-table [value]="likedDocuments" [(selection)]="selected" dataKey="code" [tableStyle]="{'min-width': '50rem'}">
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 4rem">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th class="font-bold">Título</th>
+          <th class="font-bold">Código</th>
+          <th class="font-bold">Versão</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-document>
+        <tr>
+          <td>
+            <p-tableCheckbox [value]="document"></p-tableCheckbox>
+          </td>
+          <td>{{document.name}}</td>
+          <td>{{document.code}}</td>
+          <td>{{document.version}}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+</div>

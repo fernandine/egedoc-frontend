@@ -100,7 +100,11 @@
         <td>{{ folder.code }}</td>
         <td>{{ folder.documentCount }}</td>
         <td><i class="pi pi-thumbs-up"></i></td>
-        <td><i class="pi pi-star"></i></td>
+        <td><i class="pi cursor-pointer"
+          [ngClass]="{'pi-star': !isFavorite(folder), 'pi-star-fill': isFavorite(folder)}"
+          (click)="toggleFavorite(folder)">
+        </i></td>
+
         <td><i class="pi pi-comment"></i></td>
         <td><i class="pi pi-share-alt"></i></td>
         <td>

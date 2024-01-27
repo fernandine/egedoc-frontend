@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MenuItem, SharedModule } from 'primeng/api';
 import { Observable, catchError, map, of, tap } from 'rxjs';
@@ -16,7 +16,8 @@ import { StyleClassModule } from 'primeng/styleclass';
 import { RippleModule } from 'primeng/ripple';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ToastModule } from 'primeng/toast';
-import { NgIf, AsyncPipe, DatePipe } from '@angular/common';
+import { NgIf, AsyncPipe, DatePipe, CommonModule } from '@angular/common';
+import { HeaderPlatformComponent } from 'src/app/shared/layout/header-platform/header-platform.component';
 
 interface PageEvent {
   first: number;
@@ -29,9 +30,10 @@ interface PageEvent {
     templateUrl: './folder-list.component.html',
     styleUrls: ['./folder-list.component.scss'],
     standalone: true,
-    imports: [NgIf, ToastModule, ToolbarModule, SharedModule, RippleModule, StyleClassModule, ButtonModule, FileUploadModule, TableModule, FormsModule, AsyncPipe, DatePipe]
+    imports: [CommonModule, NgIf, ToastModule, ToolbarModule, SharedModule, RippleModule, StyleClassModule, ButtonModule, FileUploadModule, TableModule, FormsModule, AsyncPipe, DatePipe, HeaderPlatformComponent]
 })
 export class FolderListComponent {
+  @Output() favoriteFolderChanged = new EventEmitter<Folder>();
 
   folders: Folder[] = [];
   folders$: Observable<Page> | null = null;
@@ -182,6 +184,16 @@ export class FolderListComponent {
       }
       this.selected = [];
     }
+  }
+
+  toggleFavorite(folder: Folder): void {
+    this.folderService.toggleFavorite(folder).subscribe(
+      updatedFolder => this.favoriteFolderChanged.emit(updatedFolder)
+    );
+  }
+
+  isFavorite(folder: Folder): boolean {
+    return folder.favorite;
   }
 
 }

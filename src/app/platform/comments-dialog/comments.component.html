@@ -1,5 +1,5 @@
 <p-dialog [(visible)]="showDialog" appendTo="body" [modal]="true" [breakpoints]="{'960px': '75vw', '640px': '100vw'}"
-  [style]="{width: '40vw'}" [closable]="false" [showHeader]="false">
+  [style]="{width: '40vw'}" [closable]="false">
   <div class="flex flex-column align-items-center my-4">
     <span class="flex align-items-center justify-content-center bg-cyan-100 text-cyan-800 mr-3 border-circle mb-3"
       style="width:64px;height:64px">
@@ -15,7 +15,7 @@
     <div class=" border-top-1 surface-border pt-3 flex">
       <button pButton pRipple icon="pi pi-times" (click)="showDialog = false" label="Cancelar"
         class="p-button-outlined w-6 mr-2"></button>
-      <button pButton pRipple icon="pi pi-check" (click)="onSubmit()" (click)="showDialog = false" label="Enviar"
+      <button pButton pRipple icon="pi pi-check" (click)="onSubmit()" label="Enviar"
         class="w-6 ml-2"></button>
     </div>
   </ng-template>

@@ -18,11 +18,9 @@ import { ReviewService } from 'src/app/services/review.service';
   styleUrls: ['./comments.component.scss']
 })
 export class CommentsComponent {
-  @Input() showDialog = false;
+  @Input() showDialog!: boolean;
   @Input() selectedItem: Folder | Document | null = null;
-
   form!: FormGroup;
-  showCommentsDialog!: boolean;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -49,7 +47,6 @@ export class CommentsComponent {
     return !('subFolders' in item);
   }
 
-
   isFolder(item: Folder | Document): item is Folder {
     return 'subFolders' in item;
   }
@@ -70,7 +67,7 @@ export class CommentsComponent {
         )
         .subscribe(response => {
           console.log('Comentário criado com sucesso', response);
-          this.showCommentsDialog = false;
+          this.showDialog = false;
         });
     }
   }

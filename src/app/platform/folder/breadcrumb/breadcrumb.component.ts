@@ -12,9 +12,6 @@ import { BreadcrumbModule } from 'primeng/breadcrumb';
 export class BreadcrumbComponent {
   @Input() fullPath: string = '';
 
-  ngOnInit() {
-    this.getBreadcrumbItems();
-  }
   getBreadcrumbItems(): string[] {
     let items: string[] = this.fullPath ? this.fullPath?.split('>') : [];
 

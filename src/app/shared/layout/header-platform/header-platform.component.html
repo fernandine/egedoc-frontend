@@ -1,3 +1,4 @@
+<p-toast [breakpoints]="{'920px': {width: '100%', right: '0', left: '0'}}"></p-toast>
 <div class="flex flex-column">
   <div class="bg-bluegray-600" style="height:150px">
     <div class="py-3 px-5 flex align-items-center justify-content-between relative lg:static" style="min-height: 80px">
@@ -88,12 +89,25 @@
                   <span class="font-medium">Segurança e Backup</span>
                 </a>
               </li>
-              <li>
-                <a pRipple
-                  class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
-                  <span class="font-medium">Favoritos</span>
+              <li class="relative">
+                <a pRipple class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150"
+                    pStyleClass="@next" enterClass="hidden" enterActiveClass="scalein" leaveToClass="hidden" leaveActiveClass="fadeout" [hideOnOutsideClick]="true">
+                    <span class="font-medium">Favoritos</span>
+                    <i class="pi pi-angle-down ml-auto lg:-rotate-90"></i>
                 </a>
-              </li>
+                <ul class="list-none py-0 pl-3 m-0 lg:px-0 border-round shadow-0 lg:shadow-2 lg:border-1 border-50 lg:absolute surface-overlay hidden origin-top w-full lg:w-15rem cursor-pointer left-100 top-0">
+                    <li>
+                        <a pRipple (click)="navDocumentFavorite()" class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
+                            <span class="font-medium">Documentos favoritos</span>
+                        </a>
+                    </li>
+                    <li class="relative">
+                        <a pRipple (click)="navFolderFavorite()" class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
+                            <span class="font-medium">Pastas favoritas</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
             </ul>
           </li>
           <li>
@@ -141,15 +155,15 @@
       </div>
     </div>
     <ul
-      class="list-none py-3 px-5 m-0 flex align-items-center font-medium overflow-x-auto border-top-1 border-yellow-500">
+      class="list-none pt-3 px-5 flex align-items-center font-medium overflow-x-auto border-top-1 border-yellow-500">
       <li class="px-2">
-        <a class="cursor-pointer text-indigo-200 white-space-nowrap">Copiar</a>
+        <a (click)="copyDocument()" class="cursor-pointer text-indigo-200 white-space-nowrap">Copiar</a>
       </li>
       <li class="px-2">
-        <a class="cursor-pointer text-indigo-200 white-space-nowrap">Colar</a>
+        <a (click)="pasteDocument()" class="cursor-pointer text-indigo-200 white-space-nowrap">Colar</a>
       </li>
       <li class="px-2">
-        <a class="cursor-pointer text-indigo-200 white-space-nowrap">Recortar</a>
+        <a  class="cursor-pointer text-indigo-200 white-space-nowrap">Recortar</a>
       </li>
       <li class="px-2">
         <a class="cursor-pointer text-indigo-200 white-space-nowrap">Remover</a>
@@ -160,6 +174,11 @@
       <li class="px-2">
         <a class="cursor-pointer text-indigo-200 white-space-nowrap">Mais</a>
       </li>
+      <li class="ml-auto">
+        <p-selectButton [options]="stateOptions" [(ngModel)]="value" optionLabel="label" optionValue="value"></p-selectButton>
+      </li>
     </ul>
+
   </div>
+
 </div>
