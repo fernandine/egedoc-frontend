@@ -29,8 +29,8 @@ export class HeaderPlatformComponent {
   selectedDocument: Document | null = null;
   folderId!: number;
   stateOptions: any[] = [{icon: PrimeIcons.MOON, value: 'off'}, {icon: PrimeIcons.SUN, value: 'on'}];
-  value: string = 'off';
-
+  lastAction: 'copy' | 'cut' | null = null;
+value!: boolean;
   constructor(
     private router: Router,
     private documentService: DocumentService,
@@ -59,26 +59,56 @@ export class HeaderPlatformComponent {
     this.router.navigate(['document-favorite']);
   }
 
+
+  pasteDocument() {
+    if (this.lastAction === 'copy') {
+      this.pasteCopy();
+    } else if (this.lastAction === 'cut') {
+      this.pasteCut();
+    }
+  }
+
   copyDocument() {
     if (this.selectedDocument && 'id' in this.selectedDocument && this.selectedDocument.id !== undefined) {
       console.log('Document ID a ser copiado:', this.selectedDocument.id);
 
       this.documentService.copy(this.selectedDocument.id).subscribe(
         () => {
-          this.messageService.add({ severity: 'info', summary: 'Documento copiado' });
+          this.messageService.add({ severity: 'success', summary: 'Documento copiado' });
         },
         (error) => {
-          // Lógica para tratar erros
+          this.messageService.add({ severity: 'error', summary: 'Erro ao copiar o documento' });
         }
       );
     } else {
       console.log('Nenhum documento selecionado ou ID indefinido.');
     }
+    this.lastAction = 'copy';
+
   }
 
-  pasteDocument() {
+  cutDocument() {
+    if (this.selectedDocument && 'id' in this.selectedDocument && this.selectedDocument.id !== undefined) {
+      console.log('Document ID a ser recortado:', this.selectedDocument.id);
+
+      this.documentService.cut(this.selectedDocument.id).subscribe(
+        () => {
+          this.messageService.add({ severity: 'success', summary: 'Documento recortado' });
+        },
+        (error) => {
+          this.messageService.add({ severity: 'error', summary: 'Erro ao recortar o documento' });
+        }
+      );
+    } else {
+      console.log('Nenhum documento selecionado ou ID indefinido.');
+    }
+    this.lastAction = 'cut';
+
+  }
+
+  pasteCopy() {
     if (this.selectedFolder && 'id' in this.selectedFolder && this.selectedFolder.id !== undefined &&
-    this.selectedDocument && 'id' in this.selectedDocument && this.selectedDocument.id !== undefined) {
+      this.selectedDocument && 'id' in this.selectedDocument && this.selectedDocument.id !== undefined) {
       console.log('Folder ID a ser colado:', this.selectedFolder.id);
 
       const request: PasteRequest = {
@@ -88,30 +118,35 @@ export class HeaderPlatformComponent {
 
       this.documentService.copyAndPasteDocument(request).subscribe(
         () => {
-          this.messageService.add({ severity: 'info', summary: 'Documento colado' });
+          this.messageService.add({ severity: 'success', summary: 'Documento colado' });
         },
         (error) => {
-          // Lógica para tratar erros
+          this.messageService.add({ severity: 'error', summary: 'Erro ao colar o documento' });
         }
       );
     }
   }
 
+  pasteCut() {
+    if (this.selectedFolder && 'id' in this.selectedFolder && this.selectedFolder.id !== undefined &&
+      this.selectedDocument && 'id' in this.selectedDocument && this.selectedDocument.id !== undefined) {
+      console.log('Folder ID a ser colado:', this.selectedFolder.id);
 
+      const request: PasteRequest = {
+        documentId: this.selectedDocument.id,
+        destinationFolderId: this.selectedFolder.id,
+      };
 
-
-  // cut(documentId: number, destinationFolderId: number) {
-  //   const request: PasteRequest = { documentId, destinationFolderId };
-  //   this.documentService.cutDocument(request).subscribe(
-  //     (cutDocument) => {
-  //       console.log('Documento recortado:', cutDocument);
-  //       // Lógica adicional, se necessário
-  //     },
-  //     error => {
-  //       console.error('Erro ao recortar o documento:', error);
-  //     }
-  //   );
-  // }
+      this.documentService.cutAndPasteDocument(request).subscribe(
+        () => {
+          this.messageService.add({ severity: 'success', summary: 'Documento colado' });
+        },
+        (error) => {
+          this.messageService.add({ severity: 'error', summary: 'Erro ao colar o documento' });
+        }
+      );
+    }
+  }
 
 }
 

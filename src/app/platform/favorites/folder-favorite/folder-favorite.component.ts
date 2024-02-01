@@ -13,6 +13,9 @@ import { RippleModule } from 'primeng/ripple';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ToastModule } from 'primeng/toast';
 import { DividerModule } from 'primeng/divider';
+import { ReviewService } from 'src/app/services/review.service';
+import { Review } from 'src/app/common/review';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-folder-favorite',
@@ -23,23 +26,32 @@ import { DividerModule } from 'primeng/divider';
 })
 export class FolderFavoriteComponent {
 
-  likedFolders: Folder[] = [];
-  selected!: Folder[] | null;
+  selected!: Review[] | null;
+  folderId!: number;
+  reviews: Review[] = [];
 
   constructor(
     private folderService: FolderService,
-    private headerService: HeaderService
+    private headerService: HeaderService,
+    private reviewService: ReviewService,
+    private route: ActivatedRoute
     ) { }
+    ngOnInit(): void {
+      this.headerService.setHeaderForSite(false);
 
-  ngOnInit(): void {
-    this.headerService.setHeaderForSite(false);
-
-    this.getFolderList();
-  }
+      this.route.params.subscribe(params => {
+        this.folderId = params['id'];
+          this.getFolderList();
+      });
+    }
 
   getFolderList(): void {
-    this.folderService.findByFavorite(true).subscribe(
-      likedFolders => this.likedFolders = likedFolders
+    this.reviewService.listByFolderId(this.folderId).subscribe(
+      (reviews: Review[]) => {
+        this.reviews = reviews;      },
+      (error) => {
+        console.error('Erro ao obter avaliações por folderId', error);
+      }
     );
   }
 

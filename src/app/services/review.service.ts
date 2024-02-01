@@ -13,8 +13,13 @@ export class ReviewService {
 
   private http = inject(HttpClient);
 
-  list(): Observable<Review[]> {
-    const url = `${this.apiUrl}`;
+  listByFolderId(folderId: number): Observable<Review[]> {
+    const url = `${this.apiUrl}/folder/${folderId}`;
+    return this.http.get<Review[]>(url);
+  }
+
+  listByDocumentId(documentId: number): Observable<Review[]> {
+    const url = `${this.apiUrl}/document/${documentId}`;
     return this.http.get<Review[]>(url);
   }
 

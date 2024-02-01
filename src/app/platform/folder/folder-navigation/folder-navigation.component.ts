@@ -1,13 +1,12 @@
 import { Component, ElementRef, EventEmitter, Input, Output, Renderer2, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { SharedModule, MessageService } from 'primeng/api';
+import { SharedModule, MessageService, Message } from 'primeng/api';
 import { Document } from 'src/app/common/document';
 import { Folder } from 'src/app/common/folder';
 
 import { DocumentService } from 'src/app/services/document.service';
 import { FolderService } from 'src/app/services/folder.service';
 import { HeaderService } from 'src/app/services/header.service';
-import { NotificationService } from 'src/app/services/notification.service';
 import { FormsModule } from '@angular/forms';
 import { NgIf, NgFor, AsyncPipe, DatePipe, CommonModule } from '@angular/common';
 import { TableModule } from 'primeng/table';
@@ -22,7 +21,7 @@ import { CommentsComponent } from '../../comments-dialog/comments.component';
 import { SelectionService } from 'src/app/services/selection.service';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { ToastModule } from 'primeng/toast';
-
+import { FileTypesService } from 'src/app/services/file-types.service';
 
 @Component({
   selector: 'app-folder-navigation',
@@ -36,26 +35,26 @@ import { ToastModule } from 'primeng/toast';
     FileUploadModule,
     ProgressBarModule,
     SharedModule,
-     RippleModule,
-     StyleClassModule,
-     BadgeModule,
-     ButtonModule,
-     TableModule,
-     ToastModule,
-     NgIf,
-     FormsModule,
-     NgFor,
-     AsyncPipe,
-     DatePipe,
-     BreadcrumbComponent,
+    RippleModule,
+    StyleClassModule,
+    BadgeModule,
+    ButtonModule,
+    TableModule,
+    ToastModule,
+    NgIf,
+    FormsModule,
+    NgFor,
+    AsyncPipe,
+    DatePipe,
+    BreadcrumbComponent,
     CommentsComponent
   ]
 })
 export class FolderNavigationComponent {
+
   progress: number = 0;
   showCommentsDialog = false;
   someDocumentId: number | null = null;
-  comment!: string;
   itemLike: boolean = false;
   favorite: boolean = false;
   subFolders: Folder[] = [];
@@ -76,12 +75,11 @@ export class FolderNavigationComponent {
   constructor(
     public documentService: DocumentService,
     private route: ActivatedRoute,
-    private notificationService: NotificationService,
     private messageService: MessageService,
     private folderService: FolderService,
     private router: Router,
     private headerService: HeaderService,
-    private selectionService: SelectionService
+    private selectionService: SelectionService,
   ) { }
 
   ngOnInit(): void {
@@ -126,7 +124,8 @@ export class FolderNavigationComponent {
       this.navigateTosubFolder(item);
     } else if (this.isDocument(item)) {
       this.selectionService.setSelectedDocument(item);
-      this.navigateToDocument(item.id, item);
+      this.navigateToDocument(item);
+
     }
   }
 
@@ -135,12 +134,33 @@ export class FolderNavigationComponent {
       this.router.navigate(['../', folder.id], { relativeTo: this.route });
     }
   }
+  navigateToDocument(document: Document): void {
+      this.router.navigate(['documents', document.id]);
+  }
 
-  navigateToDocument(documentId: number, document: Document): void {
-    if (!document.editing) {
-      this.router.navigate(['/documents', documentId]);
+openDocumentInViewer(item: Document): void {
+  if (!item.editing) {
+    const documentUrl = item.fileUris[0];
+    const allowedExtensions = ['.pdf', '.txt', '.pptx', '.docx', '.xlsx', '.mp4', '.mov', '.mp3', '.wav', '.jpg'];
+    const hasAllowedExtension = allowedExtensions.some(extension => documentUrl && documentUrl.endsWith(extension));
+
+    if (hasAllowedExtension) {
+      if (FileTypesService.isVideoFile(documentUrl)) {
+        window.open(documentUrl, '_blank');
+      } else if (FileTypesService.isAudioFile(documentUrl)) {
+        window.open(documentUrl, '_blank');
+      } else if (FileTypesService.isImageFile(documentUrl)) {
+        window.open(documentUrl, '_blank');
+      } else {
+        const viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(documentUrl)}`;
+        window.open(viewerUrl, '_blank');
+      }
+    } else {
+      console.error('Extensão de arquivo não suportada:', documentUrl);
+      this.messageService.add({ severity: 'error', summary: 'Extensão de arquivo não suportada!' });
     }
   }
+}
 
   onClickCreateFolder(): void {
     const newFolderData = {
@@ -177,6 +197,7 @@ export class FolderNavigationComponent {
     );
   }
 
+
   enableEditing(subFolder: any): void {
     subFolder.editing = true;
     subFolder.newName = subFolder.name;
@@ -210,13 +231,6 @@ export class FolderNavigationComponent {
     }, 1000);
   }
 
-  onDragEnter(): void {
-    this.isDragging = true;
-  }
-
-  onDragLeave(): void {
-    this.isDragging = true;
-  }
 
   deleteItem(item: Folder | Document): void {
     if (this.isFolder(item)) {

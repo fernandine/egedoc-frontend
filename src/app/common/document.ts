@@ -1,4 +1,3 @@
-import { Tag } from "primeng/tag";
 import { AccessPermission } from "./access-permission";
 import { ApprovalStatus } from "./enums/approval-status";
 import { DocumentType } from "./enums/document-type";
@@ -36,4 +35,5 @@ export interface Document {
   tags: string[];
   versions: Version[];
   editing?: boolean;
+
 }

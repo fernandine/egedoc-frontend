@@ -110,8 +110,9 @@ copy(documentId: number): Observable<Document> {
     return this.http.post<Document>(`${this.apiUrl}/cut-paste`, request);
   }
 
-  cutDocument(request: PasteRequest): Observable<Document> {
-    return this.http.post<Document>(`${this.apiUrl}/cut`, request);
+  cut(documentId: number): Observable<Document> {
+    const url = `${this.apiUrl}/${documentId}/cut`;
+    return this.http.post<Document>(url, documentId);
   }
 
   // copyDocumentId(documentId: number) {

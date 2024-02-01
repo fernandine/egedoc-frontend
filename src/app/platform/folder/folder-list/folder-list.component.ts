@@ -1,13 +1,12 @@
-import { ChangeDetectorRef, Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MenuItem, SharedModule } from 'primeng/api';
+import { MessageService, SharedModule } from 'primeng/api';
 import { Observable, catchError, map, of, tap } from 'rxjs';
 import { Folder } from 'src/app/common/folder';
 import { Page } from 'src/app/common/page';
 import { DocumentService } from 'src/app/services/document.service';
 import { FolderService } from 'src/app/services/folder.service';
 import { HeaderService } from 'src/app/services/header.service';
-import { NotificationService } from 'src/app/services/notification.service';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { FileUploadModule } from 'primeng/fileupload';
@@ -46,11 +45,11 @@ export class FolderListComponent {
 
   constructor(
     private folderService: FolderService,
-    private notificationService: NotificationService,
     private router: Router,
     private route: ActivatedRoute,
     private headerService: HeaderService,
-    private documentService: DocumentService
+    private documentService: DocumentService,
+    private message: MessageService
   ) { }
 
   ngOnInit() {
@@ -81,7 +80,7 @@ export class FolderListComponent {
             this.updateFolderDocumentCount();
           }),
           catchError(() => {
-            this.notificationService.error('Error loading folders');
+            this.message.add({ severity: 'error', summary: 'Erro ao carregar a pasta.' });
             return of({ folders: [], totalElements: 0 } as Page);
           })
         );
@@ -161,7 +160,7 @@ export class FolderListComponent {
   deleteFolder(folder: Folder): void {
     this.folderService.deleteFolder(folder.id).subscribe(
       () => {
-        this.notificationService.success('Pasta excluída com sucesso');
+        this.message.add({ severity: 'success', summary: 'Pasta excluída com sucesso' });
         if (this.folders$) {
           this.folders$ = this.folders$.pipe(
             map((page) => {
@@ -171,8 +170,8 @@ export class FolderListComponent {
           );
         }
       },
-      (error) => {
-        this.notificationService.error('Erro ao excluir a pasta');
+      () => {
+        this.message.add({ severity: 'error', summary: 'Erro ao excluir a pasta' });
       }
     );
   }

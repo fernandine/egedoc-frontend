@@ -2,19 +2,21 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
-import { NotificationService } from 'src/app/services/notification.service';
 import { DividerModule } from 'primeng/divider';
 import { RippleModule } from 'primeng/ripple';
 import { ButtonModule } from 'primeng/button';
 import { CheckboxModule } from 'primeng/checkbox';
 import { InputTextModule } from 'primeng/inputtext';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
     selector: 'app-portal',
     templateUrl: './portal.component.html',
     styleUrls: ['./portal.component.scss'],
     standalone: true,
-    imports: [FormsModule, ReactiveFormsModule, InputTextModule, CheckboxModule, ButtonModule, RippleModule, DividerModule]
+    providers: [MessageService],
+    imports: [FormsModule, ReactiveFormsModule, ToastModule, InputTextModule, CheckboxModule, ButtonModule, RippleModule, DividerModule]
 })
 export class PortalComponent {
   form!: FormGroup;
@@ -23,7 +25,7 @@ export class PortalComponent {
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private notificationService: NotificationService
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -38,13 +40,13 @@ export class PortalComponent {
       this.authService.login(this.form.value.username, this.form.value.password).subscribe((success) => {
         if (success) {
           this.router.navigate(['/dashboard']);
-          this.notificationService.success('Logado com sucesso');
+          this.messageService.add({ severity: 'success', summary: 'Logado com sucesso!' });
         } else {
-          this.notificationService.error('Email ou senha inválido');
+          this.messageService.add({ severity: 'error', summary: 'Email ou senha inválido' });
         }
       });
     } else {
-      this.notificationService.warn('Por favor, preencha todos os campos');
+      this.messageService.add({ severity: 'info', summary: 'Por favor, preencha todos os campos' });
     }
   }
 }
