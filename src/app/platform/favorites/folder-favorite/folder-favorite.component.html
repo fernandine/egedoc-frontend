@@ -13,7 +13,7 @@
       <button pButton pRipple label="Atualizar" icon="pi pi-refresh mr-2" class="p-button-help"></button>
     </ng-template>
   </p-toolbar>
-    <p-table [value]="reviews" [(selection)]="selected" dataKey="code" [tableStyle]="{'min-width': '50rem'}">
+    <p-table [value]="likedFolders" [(selection)]="selected" dataKey="code" [tableStyle]="{'min-width': '50rem'}">
       <ng-template pTemplate="header">
         <tr>
           <th style="width: 4rem">
@@ -24,14 +24,14 @@
           <th class="font-bold">Versão</th>
         </tr>
       </ng-template>
-      <ng-template pTemplate="body" let-review>
+      <ng-template pTemplate="body" let-folder>
         <tr>
           <td>
-            <p-tableCheckbox [value]="review"></p-tableCheckbox>
+            <p-tableCheckbox [value]="folder"></p-tableCheckbox>
           </td>
-          <td>{{review.name}}</td>
-          <td>{{review.code}}</td>
-          <td>{{review.version}}</td>
+          <td>{{folder.name}}</td>
+          <td>{{folder.id}}</td>
+          <td>{{folder.version}}</td>
         </tr>
       </ng-template>
     </p-table>

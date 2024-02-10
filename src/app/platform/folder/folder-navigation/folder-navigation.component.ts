@@ -21,7 +21,7 @@ import { CommentsComponent } from '../../comments-dialog/comments.component';
 import { SelectionService } from 'src/app/services/selection.service';
 import { ProgressBarModule } from 'primeng/progressbar';
 import { ToastModule } from 'primeng/toast';
-import { FileTypesService } from 'src/app/services/file-types.service';
+import { PreviewerComponent } from '../../previewer/previewer.component';
 
 @Component({
   selector: 'app-folder-navigation',
@@ -47,7 +47,8 @@ import { FileTypesService } from 'src/app/services/file-types.service';
     AsyncPipe,
     DatePipe,
     BreadcrumbComponent,
-    CommentsComponent
+    CommentsComponent,
+    PreviewerComponent
   ]
 })
 export class FolderNavigationComponent {
@@ -126,8 +127,33 @@ export class FolderNavigationComponent {
       this.selectionService.setSelectedDocument(item);
       this.navigateToDocument(item);
 
+      if (item.fileUri) {
+        this.navigateToPreview(item);
+      } else {
+        console.error('File URI is undefined for the selected document.');
+      }
     }
   }
+
+  navigateToPreview(item: Document): void {
+    if (item.fileUri) {
+      const fileName = item.fileUri.substring(item.fileUri.lastIndexOf('/') + 1);
+      this.documentService.viewFile(fileName).subscribe(
+        (fileContent: ArrayBuffer) => {
+          console.log('Conteúdo do arquivo recebido:', fileContent);
+
+          this.router.navigate(['preview-file'], { state: { fileContent, fileName: fileName } });
+        },
+        (error) => {
+          console.error('Erro ao buscar o conteúdo do arquivo:', error);
+        }
+      );
+    } else {
+      console.error('Nome do arquivo indisponível.');
+    }
+  }
+
+
 
   navigateTosubFolder(folder: Folder): void {
     if (!folder.editing) {
@@ -135,32 +161,32 @@ export class FolderNavigationComponent {
     }
   }
   navigateToDocument(document: Document): void {
-      this.router.navigate(['documents', document.id]);
+    this.router.navigate(['documents', document.id]);
   }
 
-openDocumentInViewer(item: Document): void {
-  if (!item.editing) {
-    const documentUrl = item.fileUris[0];
-    const allowedExtensions = ['.pdf', '.txt', '.pptx', '.docx', '.xlsx', '.mp4', '.mov', '.mp3', '.wav', '.jpg'];
-    const hasAllowedExtension = allowedExtensions.some(extension => documentUrl && documentUrl.endsWith(extension));
+  // openDocumentInViewer(item: Document): void {
+  //   if (!item.editing) {
+  //     const documentUrl = item.fileUris[0];
+  //     const allowedExtensions = ['.pdf', '.txt', '.pptx', '.docx', '.xlsx', '.mp4', '.mov', '.mp3', '.wav', '.jpg'];
+  //     const hasAllowedExtension = allowedExtensions.some(extension => documentUrl && documentUrl.endsWith(extension));
 
-    if (hasAllowedExtension) {
-      if (FileTypesService.isVideoFile(documentUrl)) {
-        window.open(documentUrl, '_blank');
-      } else if (FileTypesService.isAudioFile(documentUrl)) {
-        window.open(documentUrl, '_blank');
-      } else if (FileTypesService.isImageFile(documentUrl)) {
-        window.open(documentUrl, '_blank');
-      } else {
-        const viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(documentUrl)}`;
-        window.open(viewerUrl, '_blank');
-      }
-    } else {
-      console.error('Extensão de arquivo não suportada:', documentUrl);
-      this.messageService.add({ severity: 'error', summary: 'Extensão de arquivo não suportada!' });
-    }
-  }
-}
+  //     if (hasAllowedExtension) {
+  //       if (FileTypesService.isVideoFile(documentUrl)) {
+  //         window.open(documentUrl, '_blank');
+  //       } else if (FileTypesService.isAudioFile(documentUrl)) {
+  //         window.open(documentUrl, '_blank');
+  //       } else if (FileTypesService.isImageFile(documentUrl)) {
+  //         window.open(documentUrl, '_blank');
+  //       } else {
+  //         const viewerUrl = `https://docs.google.com/viewer?url=${encodeURIComponent(documentUrl)}`;
+  //         window.open(viewerUrl, '_blank');
+  //       }
+  //     } else {
+  //       console.error('Extensão de arquivo não suportada:', documentUrl);
+  //       this.messageService.add({ severity: 'error', summary: 'Extensão de arquivo não suportada!' });
+  //     }
+  //   }
+  // }
 
   onClickCreateFolder(): void {
     const newFolderData = {
@@ -188,7 +214,6 @@ openDocumentInViewer(item: Document): void {
           this.folder.subFolders.length = 0;
           this.folder.subFolders.push(createdFolder);
           this.loadFolderDetails();
-
         }
       },
       (error) => {
@@ -196,7 +221,6 @@ openDocumentInViewer(item: Document): void {
       }
     );
   }
-
 
   enableEditing(subFolder: any): void {
     subFolder.editing = true;
@@ -231,7 +255,6 @@ openDocumentInViewer(item: Document): void {
     }, 1000);
   }
 
-
   deleteItem(item: Folder | Document): void {
     if (this.isFolder(item)) {
       this.folderService.deleteFolder(item.id).subscribe(
@@ -247,7 +270,6 @@ openDocumentInViewer(item: Document): void {
       this.documentService.deleteDocument(item.id).subscribe(
         () => {
           console.log('Documento deletado com sucesso!');
-
           this.loadFolderDetails();
         },
         (error) => {
@@ -316,7 +338,5 @@ openDocumentInViewer(item: Document): void {
       );
     }
   }
-
-
 }
 

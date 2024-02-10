@@ -1,9 +1,8 @@
 <p-toast></p-toast>
+
 <div *ngIf="folders$ | async as page">
 <div class="card p-2">
-  <p-toast></p-toast>
   <p-toolbar styleClass="mb-4 gap-2">
-
     <ng-template pTemplate="left">
       <ul class="z-5 list-none p-0 m-0 flex lg:align-items-center select-none flex-column lg:flex-row">
         <li>
@@ -18,8 +17,8 @@
             class="list-none py-3 px-6 m-0 lg:px-0 lg:py-0 border-round shadow-0 lg:border-1 border-50 lg:shadow-2 lg:absolute surface-overlay hidden origin-top w-full lg:w-15rem cursor-pointer">
             <li>
               <a pRipple
-                class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
-                <span (click)="onClickCreateFolder()" class="font-medium">Criar Pasta</span>
+              (click)="onClickCreateFolder()" class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 transition-colors transition-duration-150">
+                <span class="font-medium">Criar Pasta</span>
               </a>
             </li>
             <li>
@@ -97,7 +96,7 @@
         </td>
 
         <td>{{ folder.creationDate | date:"dd/MM/yyyy" }}</td>
-        <td>{{ folder.code }}</td>
+        <td>{{ folder.id }}</td>
         <td>{{ folder.documentCount }}</td>
         <td><i class="pi pi-thumbs-up"></i></td>
         <td><i class="pi cursor-pointer"

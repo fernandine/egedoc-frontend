@@ -1,4 +1,4 @@
-import { HttpClient, HttpEvent } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { EventEmitter, Injectable, inject } from '@angular/core';
 import { Observable, first, map, tap } from 'rxjs';
 import { environment } from 'src/environments/environment';
@@ -115,12 +115,12 @@ copy(documentId: number): Observable<Document> {
     return this.http.post<Document>(url, documentId);
   }
 
-  // copyDocumentId(documentId: number) {
-  //   this.selection.setCopiedDocumentId(documentId);
-  // }
+/*************** VISUALIZADOR *******************/
 
-  // copyDocument(documentId: number, folderId: number): Observable<any> {
-  //   const copiedDocumentId = this.selection.getCopiedDocumentId();
-  //   return this.http.post<any>(`${this.apiUrl}/${folderId}/copy`, { documentId: copiedDocumentId });
-  // }
+
+viewFile(fileName: string): Observable<ArrayBuffer> {
+  const url = `${this.apiUrl}/view?fileName=${encodeURIComponent(fileName)}`;
+  return this.http.get(url, { responseType: 'arraybuffer' });
+}
+
 }

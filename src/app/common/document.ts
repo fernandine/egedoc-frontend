@@ -27,7 +27,7 @@ export interface Document {
   responsible: string;
   notify: boolean;
   reference: string;
-  fileUris: string[];
+  fileUri: string;
   documentType: DocumentType;
   approvalStatus: ApprovalStatus;
   accessPermission: AccessPermission;

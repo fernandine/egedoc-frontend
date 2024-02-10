@@ -13,9 +13,6 @@ import { RippleModule } from 'primeng/ripple';
 import { ToolbarModule } from 'primeng/toolbar';
 import { ToastModule } from 'primeng/toast';
 import { DividerModule } from 'primeng/divider';
-import { ReviewService } from 'src/app/services/review.service';
-import { Review } from 'src/app/common/review';
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-folder-favorite',
@@ -26,40 +23,67 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class FolderFavoriteComponent {
 
-  selected!: Review[] | null;
-  folderId!: number;
-  reviews: Review[] = [];
+  likedFolders: Folder[] = [];
+  selected!: Folder[] | null;
 
   constructor(
     private folderService: FolderService,
-    private headerService: HeaderService,
-    private reviewService: ReviewService,
-    private route: ActivatedRoute
-    ) { }
-    ngOnInit(): void {
-      this.headerService.setHeaderForSite(false);
+    private headerService: HeaderService
+  ) { }
 
-      this.route.params.subscribe(params => {
-        this.folderId = params['id'];
-          this.getFolderList();
-      });
-    }
+  ngOnInit(): void {
+    this.headerService.setHeaderForSite(false);
+    this.getDocumentList();
+  }
 
-  getFolderList(): void {
-    this.reviewService.listByFolderId(this.folderId).subscribe(
-      (reviews: Review[]) => {
-        this.reviews = reviews;      },
-      (error) => {
-        console.error('Erro ao obter avaliações por folderId', error);
-      }
+  getDocumentList(): void {
+    this.folderService.findByFavorite(true).subscribe(
+      likedFolders => this.likedFolders = likedFolders
     );
   }
 
   onFavoriteProductsChanged(folder: Folder): void {
     this.folderService.toggleFavorite(folder).subscribe(
-      () => this.getFolderList()
+      () => this.getDocumentList()
     );
   }
 }
+
+
+  // selected!: Review[] | null;
+  // folderId!: number;
+  // reviews: Review[] = [];
+
+  // constructor(
+  //   private folderService: FolderService,
+  //   private headerService: HeaderService,
+  //   private reviewService: ReviewService,
+  //   private route: ActivatedRoute
+  //   ) { }
+  //   ngOnInit(): void {
+  //     this.headerService.setHeaderForSite(false);
+
+  //     this.route.params.subscribe(params => {
+  //       this.folderId = params['id'];
+  //         this.getFolderList();
+  //     });
+  //   }
+
+  // getFolderList(): void {
+  //   this.reviewService.listByFolderId(this.folderId).subscribe(
+  //     (reviews: Review[]) => {
+  //       this.reviews = reviews;      },
+  //     (error) => {
+  //       console.error('Erro ao obter avaliações por folderId', error);
+  //     }
+  //   );
+  // }
+
+  // onFavoriteProductsChanged(folder: Folder): void {
+  //   this.folderService.toggleFavorite(folder).subscribe(
+  //     () => this.getFolderList()
+  //   );
+  // }
+
 
 

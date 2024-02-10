@@ -34,7 +34,11 @@ const routes: Routes = [
   { path: 'documents', loadChildren: () => import('./platform/document/document-form.module').then(m => m.DocumentFormModule) },
   { path: 'document-favorite', loadChildren: () => import('./platform/favorites/document-favorite/document-favorite.module').then(m => m.DocumentFavoriteModule) },
   { path: 'folder-favorite', loadChildren: () => import('./platform/favorites/folder-favorite/folder-favorite.module').then(m => m.FolderFavoriteModule) },
-  ];
+  { path: 'files', loadChildren: () => import('./platform/folder/folder-list.module').then(m => m.FolderListModule) },
+  { path: 'preview-file', loadChildren: () => import('./platform/previewer/previewer.module').then(m => m.PreviewerModule) },
+
+
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, { preloadingStrategy: PreloadAllModules })],

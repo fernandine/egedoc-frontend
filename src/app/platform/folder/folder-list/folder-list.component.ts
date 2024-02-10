@@ -25,11 +25,11 @@ interface PageEvent {
   pageCount: number;
 }
 @Component({
-    selector: 'app-folder-list',
-    templateUrl: './folder-list.component.html',
-    styleUrls: ['./folder-list.component.scss'],
-    standalone: true,
-    imports: [CommonModule, NgIf, ToastModule, ToolbarModule, SharedModule, RippleModule, StyleClassModule, ButtonModule, FileUploadModule, TableModule, FormsModule, AsyncPipe, DatePipe, HeaderPlatformComponent]
+  selector: 'app-folder-list',
+  templateUrl: './folder-list.component.html',
+  styleUrls: ['./folder-list.component.scss'],
+  standalone: true,
+  imports: [CommonModule, NgIf, ToastModule, ToolbarModule, SharedModule, RippleModule, StyleClassModule, ButtonModule, FileUploadModule, TableModule, FormsModule, AsyncPipe, DatePipe, HeaderPlatformComponent]
 })
 export class FolderListComponent {
   @Output() favoriteFolderChanged = new EventEmitter<Folder>();
@@ -50,19 +50,19 @@ export class FolderListComponent {
     private headerService: HeaderService,
     private documentService: DocumentService,
     private message: MessageService
+
   ) { }
 
   ngOnInit() {
     this.headerService.setHeaderForSite(false);
+    this.refresh();
     this.route.paramMap.subscribe(params => {
       const folderId = params.get('id');
-
       if (folderId) {
         this.folderId = this.folder.id;
         this.loadById(this.folder);
       }
     });
-    this.refresh();
   }
 
   refresh(pageEvent: PageEvent = {
@@ -76,7 +76,6 @@ export class FolderListComponent {
             this.first = pageEvent.first;
             this.rows = pageEvent.rows;
             this.folders = page.folders;
-
             this.updateFolderDocumentCount();
           }),
           catchError(() => {
@@ -89,9 +88,11 @@ export class FolderListComponent {
 
   loadById(folder: Folder): void {
     if (folder.id !== undefined) {
-      this.folderService.loadById(folder.id).subscribe(() => {
-        this.router.navigate(['/folders', folder.id], { relativeTo: this.route });
-      });
+      this.folderService.loadById(folder.id).subscribe(
+        (folder: Folder) => {
+          this.folder = folder;
+          this.router.navigate(['/folders', folder.id], { relativeTo: this.route });
+        });
     } else {
       console.error('Folder id is undefined.');
     }
@@ -116,9 +117,11 @@ export class FolderListComponent {
       fullPath: ''
     };
     this.folderService.create(newFolderData).subscribe(
-      (createdFolder) => {
-        this.folder = createdFolder;
-        this.refresh();
+      (createdFolder: Folder) => {
+        console.log('Pasta criada com sucesso:', createdFolder);
+        this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+          this.router.navigate(['/folders']);
+        });
       },
       (error) => {
         console.error('Erro ao criar pasta:', error);
@@ -134,26 +137,26 @@ export class FolderListComponent {
     }
   }
 
-  enableEditing(subFolder: any): void {
-    subFolder.editing = true;
-    subFolder.newName = subFolder.name;
-
+  enableEditing(folder: any): void {
+    folder.editing = true;
+    folder.newName = folder.name;
   }
 
-  disableEditing(subFolder: any): void {
-    if (subFolder.editing && subFolder.name !== subFolder.newName) {
-      this.folderService.update(subFolder.id, { name: subFolder.newName })
+  disableEditing(folder: any): void {
+    if (folder.editing && folder.name !== folder.newName) {
+      this.folderService.update(folder.id, { name: folder.newName })
         .subscribe(() => {
-          this.refresh();
+          this.router.navigateByUrl('/', { skipLocationChange: true }).then(() => {
+            this.router.navigate(['/folders']);
+          });
         });
     }
-
-    subFolder.editing = false;
+    folder.editing = false;
   }
 
-  cellClick(subFolder: any): void {
-    if (!subFolder.editing) {
-      this.loadById(subFolder);
+  cellClick(folder: any): void {
+    if (!folder.editing) {
+      this.loadById(folder);
     }
   }
 
